@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:obj_detect_board/models/annotated_image.dart';
+import 'package:obj_detect_board/ui/annotation_canvas.dart';
 import 'api.dart';
 
 void main() {
@@ -23,36 +26,42 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key key}) : super(key: key);
+
   final api = Api();
+  // final painter = AnnotationCanvas();
+  final currentImg = ValueNotifier<AnnotatedImage>(null);
 
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('OBJECT DETECTION BOARD'),
       ),
-      body: Center(
-        child: Column(
+      body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            RaisedButton(
-              onPressed: getDetections,
+            Row(children: [RaisedButton(
+              onPressed: () => api.startDetecting((img) => currentImg.value = img),
               child: Text("START"),
             ),
-            RaisedButton(
-              onPressed: () => streamSub.cancel(),
-              child: Text("STOP"),
+              RaisedButton(
+                onPressed: () => api.stopDetecting(),
+                child: Text("STOP"),
+              ),],),
+            Expanded(
+              child: SizedBox(width: width, height: double.infinity, child: ValueListenableBuilder(
+                valueListenable: currentImg,
+                builder: (context, value, child) => CustomPaint(
+                  painter: AnnotationCanvas(value),
+                  willChange: true,
+                ),
+              ),
+            ),
             )
           ],
         ),
-      ),
     );
-  }
-
-  StreamSubscription streamSub;
-
-  void getDetections() async {
-    final stream = await api.startDetecting();
-    streamSub = stream.listen((event) {
-      print(event.detections.first.label);
-    });
   }
 }
