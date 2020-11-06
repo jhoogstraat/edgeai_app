@@ -11,7 +11,7 @@ class Detection {
       this.label, this.score, this.left, this.top, this.right, this.bottom);
 
   factory Detection.fromJson(dynamic json) {
-    return Detection(json[0], json[1], json[2][0][0], json[2][0][1],
-        json[2][1][0], json[2][1][1]);
+    return Detection(
+        json[0], json[1], json[2][0], json[2][1], json[2][2], json[2][3]);
   }
 }

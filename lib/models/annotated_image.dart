@@ -13,6 +13,7 @@ class AnnotatedImage {
 
   static Future<AnnotatedImage> fromJson(dynamic json) async {
     final completer = Completer<ui.Image>();
+
     decodeImageFromList(
         base64Decode(json['img']['data']), (img) => completer.complete(img));
     final image = await completer.future;
