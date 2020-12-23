@@ -4,40 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui';
 
-import 'package:obj_detect_board/models/annotated_image.dart';
+import 'package:obj_detect_board/models/ai_image.dart';
 
-final _rectPaint = Paint()
-  ..color = Colors.red
-  ..style = PaintingStyle.stroke
-  ..strokeWidth = 2;
-final _textStyle = TextStyle(
-  color: Colors.red,
-  fontSize: 20,
-);
+class AImagePainter extends CustomPainter {
+  static final _rectPaint = Paint()
+    ..color = Colors.red
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2;
+  static final _textStyle = TextStyle(
+    color: Colors.red,
+    fontSize: 20,
+  );
+  static final _zeroPaint = Paint();
 
-final _zeroPaint = Paint();
+  AImagePainter(this.aiImage);
 
-class AnnotationCanvas extends CustomPainter {
-  AnnotationCanvas(this.annotatedImage);
-
-  AnnotatedImage annotatedImage;
+  AIImage aiImage;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (annotatedImage == null || annotatedImage.img == null) return;
+    if (aiImage == null || aiImage.image == null) return;
 
     // Scale the canvas to fit the image
-    final scaleY = size.height / annotatedImage.img.height;
-    final scaleX = size.width / annotatedImage.img.width;
+    final scaleY = size.height / aiImage.image.height;
+    final scaleX = size.width / aiImage.image.width;
     canvas.scale(min(scaleX, scaleY));
 
     // Draw the image onto the canvas
-    canvas.drawImage(annotatedImage.img, Offset.zero, _zeroPaint);
+    canvas.drawImage(aiImage.image, Offset.zero, _zeroPaint);
 
-    final imgWidth = annotatedImage.img.width;
-    final imgHeight = annotatedImage.img.height;
+    final imgWidth = aiImage.image.width;
+    final imgHeight = aiImage.image.height;
 
-    for (var detection in annotatedImage.detections) {
+    for (var detection in aiImage.detections) {
       final rect = Rect.fromLTWH(
           detection.left * imgWidth,
           detection.top * imgHeight,
