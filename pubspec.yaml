@@ -10,12 +10,19 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_riverpod: ^0.12.1
-  socket_io_client: ^0.9.12
-  
+  flutter_riverpod: ^0.12.3+1
+  socket_io_client: ^2.0.0-beta
+  http: ^0.12.2
+  modal_bottom_sheet: ^2.0.0-nullsafety.1
+  multicast_dns: ^0.2.2
+  logging: ^0.11.3+2
+
 dev_dependencies:
+  pedantic: ^1.9.0
+  
   flutter_test:
     sdk: flutter
+  
 
 flutter:
   uses-material-design: true

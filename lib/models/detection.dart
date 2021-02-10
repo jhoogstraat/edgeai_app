@@ -1,17 +1,17 @@
-class Detection {
-  final String label;
+import 'package:flutter/painting.dart';
+
+class Feature {
+  final int id;
   final double score;
+  final Rect bbox;
 
-  final double left;
-  final double top;
-  final double right;
-  final double bottom;
+  Feature(this.id, this.score, this.bbox);
 
-  Detection(
-      this.label, this.score, this.left, this.top, this.right, this.bottom);
-
-  factory Detection.fromJson(dynamic json) {
-    return Detection(
-        json[0], json[1], json[2][0], json[2][1], json[2][2], json[2][3]);
+  factory Feature.fromJson(dynamic json) {
+    return Feature(
+        json['id'],
+        json['score'],
+        Rect.fromLTRB(json['bbox'][0], json['bbox'][1], json['bbox'][2],
+            json['bbox'][3]));
   }
 }
