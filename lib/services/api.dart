@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:obj_detect_board/models/device.dart';
-import 'package:obj_detect_board/models/feature_set.dart';
+import '../models/device.dart';
+import '../models/feature_set.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../models/ai_image.dart';
 import '../models/status.dart';
@@ -42,7 +42,7 @@ class Api {
                 .build());
 
   Future<Status> startStream() async {
-    final response = await http.get('http://$host:5000/start');
+    final response = await http.get(Uri.http('$host:5000', 'start'));
     final status = Status.fromJson(jsonDecode(response.body));
     return status;
   }
@@ -66,7 +66,7 @@ class Api {
   }
 
   Future<Status> fetchStatus() async {
-    final response = await http.get('http://192.168.1.27:5000');
+    final response = await http.get(Uri.http('$host:5000', 'status'));
     return Status.fromJson(jsonDecode(response.body));
   }
 

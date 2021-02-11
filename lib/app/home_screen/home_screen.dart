@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/all.dart';
-import 'package:obj_detect_board/models/feature_set.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../models/feature_set.dart';
 import '../../services/api.dart';
 import '../painters/aimage_painter.dart';
 import '../../models/ai_image.dart';
@@ -42,16 +42,14 @@ class HomeScreen extends StatelessWidget {
                 child: Consumer(
                   builder: (context, watch, child) {
                     final frame = watch(frameProvider);
-                    print(frame);
+
                     return frame.when(
                       data: (data) => CustomPaint(
                         painter: AIImagePainter(data),
                         willChange: true,
                       ),
                       loading: () => Center(child: CircularProgressIndicator()),
-                      error: (error, _) {
-                        throw error;
-                      },
+                      error: (error, _) => throw error,
                     );
                   },
                 ),

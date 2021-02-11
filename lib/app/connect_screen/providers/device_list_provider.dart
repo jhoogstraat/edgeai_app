@@ -1,31 +1,39 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:obj_detect_board/models/device.dart';
-import 'package:obj_detect_board/services/mdns.dart';
+import '../../../models/device.dart';
+import '../../../services/mdns.dart';
 
-final deviceListStateProvider =
-    ChangeNotifierProvider((ref) => DevicesRefreshState(ref.read));
+final deviceListProvider =
+    ChangeNotifierProvider((ref) => DeviceListState(ref.read));
 
-class DevicesRefreshState extends ChangeNotifier {
+class DeviceListState extends ChangeNotifier {
   // State
-  bool isInitialized = false;
-  List<Device> _devices = [];
-  List<Device> get devices => _devices;
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+
+  List<Device> _mdnsDevices = [];
+  final List<Device> _manualDevices = [];
+  List<Device> get devices => [..._mdnsDevices, ..._manualDevices];
 
   final Reader _read;
 
-  DevicesRefreshState(this._read) {
-    refreshDeviceList();
+  DeviceListState(this._read) {
+    refreshDevices();
   }
 
-  Future<void> refreshDeviceList() async {
-    _devices = await _read(mdnsProvider).discoverDevices();
-    isInitialized = true;
+  Future<void> refreshDevices() async {
+    _mdnsDevices = await _read(mdnsProvider).discoverDevices();
+    _isInitialized = true;
     notifyListeners();
   }
 
-  void addManualDevice(String ip) {
-    _devices.add(Device('Manual', ip));
+  void addDevice(String ip) {
+    _manualDevices.add(Device('Manual', ip));
+    notifyListeners();
+  }
+
+  void removeDevice(int index) {
+    _manualDevices.removeAt(index);
     notifyListeners();
   }
 }

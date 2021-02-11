@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter_riverpod/all.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:obj_detect_board/models/device.dart';
+import '../models/device.dart';
 
 final mdnsProvider = Provider((ref) => MDNSService());
 
