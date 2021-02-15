@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/device.dart';
 import 'providers/device_list_provider.dart';
-import '../home_screen/home_screen.dart';
+import '../device_screen/device_screen.dart';
 import '../../services/api.dart';
 import 'widgets/add_device_alert.dart';
 
@@ -59,7 +59,7 @@ class ConnectScreen extends StatelessWidget {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
+      MaterialPageRoute(builder: (context) => DeviceScreen()),
     );
   }
 }

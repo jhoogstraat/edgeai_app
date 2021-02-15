@@ -16,8 +16,11 @@ final frameProvider = StreamProvider.autoDispose<AIImage>(
 final setListProvider = ChangeNotifierProvider.autoDispose(
     (ref) => FeatureSetList(ref.watch(apiProvider).listenFeatureSets()));
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({Key key}) : super(key: key);
+final statusProvider =
+    FutureProvider((ref) => ref.read(apiProvider).fetchStatus());
+
+class DeviceScreen extends StatelessWidget {
+  DeviceScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,20 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Sets'),
         actions: [
+          IconButton(
+            icon: Icon(Icons.info),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                  title: Text('Device Status'),
+                  content: Text('Here comes devices status')
+                  // Consumer(
+                  //   builder: (context, watch, child) => watch(statusProvider)
+                  //       .when(data: () => Text(), loading: loading, error: error),
+                  // ),
+                  ),
+            ),
+          ),
           IconButton(
             icon: Icon(Icons.not_started_outlined),
             onPressed: () => context.read(apiProvider).startStream(),
@@ -63,12 +80,12 @@ class HomeScreen extends StatelessWidget {
                 final featureSets = watch(setListProvider);
                 return ListView.separated(
                     itemBuilder: (context, index) => ListTile(
-                          title: Text('Set ${featureSets[index].timestamp} - ' +
-                              (featureSets[index].isComplete
-                                  ? 'vollständig'
-                                  : 'unvollständig')),
-                          onTap: () => showSetDetail(context),
-                        ),
+                        title: Text('Set ${featureSets[index].timestamp} - ' +
+                            (featureSets[index].isComplete
+                                ? 'vollständig'
+                                : 'unvollständig')),
+                        // trailing: mage.memory(featureSets[index].referenceFrame),
+                        onTap: () => showSetDetail(context)),
                     separatorBuilder: (_, __) => Divider(),
                     itemCount: featureSets.length);
               },
@@ -81,8 +98,6 @@ class HomeScreen extends StatelessWidget {
 
   void showSetDetail(BuildContext context) {
     showCupertinoModalBottomSheet(
-      context: context,
-      builder: (context) => Container(),
-    );
+        context: context, builder: (context) => Container());
   }
 }
