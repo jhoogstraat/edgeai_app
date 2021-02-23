@@ -61,7 +61,7 @@ packages:
       name: flutter_riverpod
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.4"
+    version: "0.13.0-nullsafety.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -73,7 +73,7 @@ packages:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0"
+    version: "0.13.0-nullsafety.0"
   http:
     dependency: "direct main"
     description:
@@ -94,7 +94,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "4.0.0"
   logging:
     dependency: "direct main"
     description:
@@ -150,7 +150,7 @@ packages:
       name: riverpod
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.4"
+    version: "0.13.0-nullsafety.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -162,7 +162,7 @@ packages:
       name: socket_io_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-beta.2"
+    version: "2.0.0-beta.3"
   socket_io_common:
     dependency: transitive
     description:
@@ -190,7 +190,7 @@ packages:
       name: state_notifier
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.0"
   stream_channel:
     dependency: transitive
     description:

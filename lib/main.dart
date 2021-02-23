@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'app/connect_screen/connect_screen.dart';
+import 'app/screens/connect_screen/connect_screen.dart';
 import 'logging.dart';
 
 void main() async {
   setLogger();
   runApp(ProviderScope(
     child: ObjectDetectBoardApp(),
-    observers: [RiverpodLogger()],
+    // observers: [RiverpodLogger()],
   ));
 }
 
