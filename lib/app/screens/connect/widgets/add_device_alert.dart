@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/device_list_provider.dart';
 
-final _ipv4Regex = RegExp(
-    r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
+import '../../../../providers.dart';
 
 class AddDeviceAlert extends StatelessWidget {
   AddDeviceAlert({
     Key key,
   }) : super(key: key);
+
+  static final _ipv4Regex = RegExp(
+      r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
 
   final _ipTextController = TextEditingController();
   final _dialogButtonEnabled = ValueNotifier(false);
@@ -39,7 +40,7 @@ class AddDeviceAlert extends StatelessWidget {
   }
 
   void _submitButtonPress(BuildContext context) {
-    context.read(deviceListProvider).addDevice(_ipTextController.text);
+    context.read(devicesProvider).addDevice(_ipTextController.text);
     Navigator.pop(context);
   }
 }

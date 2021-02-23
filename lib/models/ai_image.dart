@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-import 'detection.dart';
+import 'feature.dart';
 
 class AIImage {
   final Image frame;

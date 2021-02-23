@@ -1,10 +1,6 @@
 import 'dart:io';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import '../models/device.dart';
-
-final mdnsProvider = Provider((ref) => MDNSService());
 
 class MDNSService {
   // Fix for Android (https://github.com/flutter/flutter/issues/55173#issuecomment-655051797)
@@ -14,9 +10,9 @@ class MDNSService {
           RawDatagramSocket.bind(host, port,
               reuseAddress: true, reusePort: false, ttl: ttl));
 
-  Future<List<Device>> discoverDevices() async {
+  Future<List<Device>> discoverDevices(
+      [Duration timeout = const Duration(seconds: 1)]) async {
     await client.start();
-    final timeout = const Duration(seconds: 3);
 
     final devices = await client
         .lookup<PtrResourceRecord>(
@@ -30,6 +26,8 @@ class MDNSService {
             timeout: timeout))
         .map((ip) => Device(ip.name, ip.address.address))
         .toList();
+
+    devices.sort((a, b) => a.name.compareTo(b.name));
 
     await client.stop();
     return devices;

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/device.dart';
 import '../models/feature_set.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../models/ai_image.dart';
@@ -11,26 +11,11 @@ import '../models/status.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:http/http.dart' as http;
 
-final selectedDeviceProvider = StateProvider<Device>((ref) => null);
-
-final apiProvider = Provider.autoDispose((ref) {
-  final device = ref.watch(selectedDeviceProvider).state;
-  final api = Api(device.ip);
-  print('created api for device ${device.ip}');
-
-  ref.onDispose(() {
-    print('disposing api');
-    api.dispose();
-  });
-
-  return api;
-});
-
 class Api {
   final String host;
   final Socket _socket;
-  final _socketFrameResponse = StreamController<AIImage>();
-  final _socketSetResponse = StreamController<FeatureSet>();
+  final _socketFrameReceiver = StreamController<AIImage>();
+  final _socketSetReceiver = StreamController<FeatureSet>();
 
   Api(this.host)
       : _socket = socket_io.io(
@@ -50,29 +35,54 @@ class Api {
   Stream<AIImage> listenFrames() {
     _socket.on('frame', (msg) async {
       final aiImage = await AIImage.fromMessage(msg);
-      _socketFrameResponse.add(aiImage);
+      _socketFrameReceiver.add(aiImage);
     });
 
-    return _socketFrameResponse.stream;
+    return _socketFrameReceiver.stream;
   }
 
   Stream<FeatureSet> listenFeatureSets() {
     _socket.on('set', (msg) async {
       final featureSet = await FeatureSet.fromMessage(msg);
-      _socketSetResponse.add(featureSet);
+      _socketSetReceiver.add(featureSet);
     });
 
-    return _socketSetResponse.stream;
+    return _socketSetReceiver.stream;
   }
 
-  Future<Status> fetchStatus() async {
-    final response = await http.get(Uri.http('$host:5000', 'status'));
+  static Future<Status> _fetchStatus(String host, String path) async {
+    final response = await http.get(Uri.http('$host:5000', path));
     return Status.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<Status> _updateStatus(String host, String path,
+      [String json]) async {
+    final response = await http.post(Uri.http('$host:5000', path),
+        body: json,
+        headers: json == null
+            ? null
+            : {HttpHeaders.contentTypeHeader: 'application/json'});
+    print(response.body);
+    return Status.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<Status> start(String host) => _updateStatus(host, 'start');
+  static Future<Status> stop(String host) => _updateStatus(host, 'stop');
+  static Future<Status> fetchStatus(String host) =>
+      _fetchStatus(host, 'status');
+
+  static Future<Status> configure(String host,
+      {@required Map<String, int> checkedSet, double percentage = 0.3}) {
+    final json = jsonEncode({
+      'set': checkedSet..removeWhere((key, value) => value == 0),
+      'percentage': percentage
+    });
+    return _updateStatus(host, 'configure', json);
   }
 
   void dispose() {
     _socket.dispose();
-    _socketFrameResponse.close();
-    _socketSetResponse.close();
+    _socketFrameReceiver.close();
+    _socketSetReceiver.close();
   }
 }

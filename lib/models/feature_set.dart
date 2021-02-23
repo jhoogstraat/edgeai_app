@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-
 class FeatureSet {
   final String id;
   final Map<String, int> requestedFeatures;
@@ -26,23 +24,5 @@ class FeatureSet {
       frame.image,
       DateTime.fromMillisecondsSinceEpoch((1000 * json['timestamp']).toInt()),
     );
-  }
-}
-
-class FeatureSetList extends ChangeNotifier {
-  FeatureSetList(Stream<FeatureSet> generator) {
-    generator.listen((featureSet) {
-      add(featureSet);
-    });
-  }
-
-  List<FeatureSet> state = [];
-
-  FeatureSet operator [](int i) => state[i]; // get
-  int get length => state.length;
-
-  void add(FeatureSet featureSet) {
-    state.add(featureSet);
-    notifyListeners();
   }
 }

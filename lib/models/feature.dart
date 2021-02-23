@@ -11,7 +11,7 @@ class Feature {
     return Feature(
         json['id'],
         json['score'],
-        Rect.fromLTRB(json['bbox'][0], json['bbox'][1], json['bbox'][2],
-            json['bbox'][3]));
+        Rect.fromLTRB(json['bbox'][0].toDouble(), json['bbox'][1].toDouble(),
+            json['bbox'][2].toDouble(), json['bbox'][3].toDouble()));
   }
 }
