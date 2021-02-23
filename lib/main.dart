@@ -7,7 +7,7 @@ void main() async {
   setLogger();
   runApp(ProviderScope(
     child: ObjectDetectBoardApp(),
-    // observers: [RiverpodLogger()],
+    observers: [RiverpodLogger()],
   ));
 }
 
@@ -16,7 +16,8 @@ class ObjectDetectBoardApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'EdgeAI',
-      theme: ThemeData.from(colorScheme: ColorScheme.dark()),
+      theme:
+          ThemeData.from(colorScheme: ColorScheme.dark(primary: Colors.white)),
       home: const ConnectScreen(),
       // debugShowCheckedModeBanner: false,
     );
