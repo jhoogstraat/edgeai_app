@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'notifiers/checked_set_notifier.dart';
 import 'notifiers/devices_notifier.dart';
-import 'app/screens/device/widgets/feature_stepper.dart';
 import 'notifiers/feature_set_notifier.dart';
 import 'services/api.dart';
 import 'services/mdns.dart';
