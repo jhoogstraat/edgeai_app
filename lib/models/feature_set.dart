@@ -17,7 +17,7 @@ class FeatureSet {
     final frame = await codec.getNextFrame();
 
     return FeatureSet(
-      json['id'],
+      json['id'].toString(),
       Map.from(json['requestedFeatures']),
       Map.from(json['detectedFeatures']),
       json['isComplete'],

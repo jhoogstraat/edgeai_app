@@ -49,6 +49,8 @@ class StreamView extends StatelessWidget {
                 onTap: onTap,
                 child: Consumer(
                   builder: (context, watch, child) {
+                    final status = watch(selectedDeviceStatusProvider).state;
+
                     return watch(frameProvider).when(
                       data: (data) => RepaintBoundary(
                         child: CustomPaint(

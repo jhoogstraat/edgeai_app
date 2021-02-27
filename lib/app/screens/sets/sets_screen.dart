@@ -32,7 +32,7 @@ class SetsScreen extends StatelessWidget {
         title: Text('Sets'),
         actions: [
           IconButton(
-              icon: const Icon(Icons.delete_forever, color: Colors.red),
+              icon: const Icon(Icons.delete_forever),
               onPressed: () => context.read(featureSetsProvider).clear())
         ],
       ),
@@ -45,7 +45,7 @@ class SetsScreen extends StatelessWidget {
                 final featureSet = sets[index];
 
                 return ListTile(
-                  title: Text('Set ID 000'),
+                  title: Text('Set-ID ${featureSet.id}'),
                   subtitle: Text(featureSet.timestamp.toIso8601String()),
                   minVerticalPadding: 25,
                   leading: SizedBox(

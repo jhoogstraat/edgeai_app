@@ -25,7 +25,7 @@ class DeviceScreen extends StatelessWidget {
         title: Text('Sets'),
         actions: [
           IconButton(
-            icon: Icon(Icons.list_alt),
+            icon: const Icon(Icons.list_alt),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SetsScreen()),
@@ -108,7 +108,7 @@ class DeviceScreen extends StatelessWidget {
                     ElevatedButton.icon(
                         onPressed: viewModel.state
                             ? null
-                            : () => _configureSetButtonPress(context),
+                            : () => _configureButtonPress(context),
                         icon: const Icon(Icons.settings),
                         label: const Text('Konfigurieren')),
                   ],
@@ -138,12 +138,15 @@ class DeviceScreen extends StatelessWidget {
     viewModel.state = false;
   }
 
-  void _configureSetButtonPress(BuildContext context) {
+  void _configureButtonPress(BuildContext context) {
+    final status = context.read(selectedDeviceStatusProvider);
+    final sliderValue = ValueNotifier(status.state.minPercentage);
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text('Configure Set'),
+        title: Text('Konfigurieren'),
         contentPadding: const EdgeInsets.fromLTRB(24, 20, 10, 24),
         content: Consumer(
           builder: (context, watch, child) {
@@ -151,17 +154,25 @@ class DeviceScreen extends StatelessWidget {
             final state = watch(checkedSetProvider);
             return Column(
               mainAxisSize: MainAxisSize.min,
-              children: context
-                  .read(selectedDeviceStatusProvider)
-                  .state
-                  .labels
-                  .entries
-                  .map((e) => FeatureStepper(
-                        featureId: e.key,
-                        title: e.value,
-                        value: state.listen(e.key),
-                      ))
-                  .toList(),
+              children: [
+                ...status.state.labels.entries
+                    .map((e) => FeatureStepper(
+                          featureId: e.key,
+                          title: e.value,
+                          value: state.listen(e.key),
+                        ))
+                    .toList(),
+                Text('Min-Prozentsatz'),
+                ValueListenableBuilder(
+                  valueListenable: sliderValue,
+                  builder: (context, value, child) => Slider(
+                    value: value,
+                    divisions: 10,
+                    label: value.toString(),
+                    onChanged: (newValue) => sliderValue.value = newValue,
+                  ),
+                )
+              ],
             );
           },
         ),
@@ -170,17 +181,22 @@ class DeviceScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(context),
               child: Text('Abbrechen')),
           ElevatedButton(
-              onPressed: () => saveCheckedListButtonPressed(context),
-              child: Text('Speichern')),
+            onPressed: () => saveConfigButtonPressed(
+                context,
+                context.read(checkedSetProvider).newCheckedSet,
+                sliderValue.value),
+            child: Text('Speichern'),
+          ),
         ],
       ),
     );
   }
 
-  Future<void> saveCheckedListButtonPressed(BuildContext context) async {
+  Future<void> saveConfigButtonPressed(BuildContext context,
+      Map<String, int> checkedSet, double minPercentage) async {
     final host = context.read(selectedDeviceProvider).state.ip;
     final status = await Api.configure(host,
-        checkedSet: context.read(checkedSetProvider).newCheckedSet);
+        checkedSet: checkedSet, minPercentage: minPercentage);
     context.read(selectedDeviceStatusProvider).state = status;
     Navigator.pop(context);
   }

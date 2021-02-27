@@ -62,7 +62,6 @@ class Api {
         headers: json == null
             ? null
             : {HttpHeaders.contentTypeHeader: 'application/json'});
-    print(response.body);
     return Status.fromJson(jsonDecode(response.body));
   }
 
@@ -72,10 +71,10 @@ class Api {
       _fetchStatus(host, 'status');
 
   static Future<Status> configure(String host,
-      {@required Map<String, int> checkedSet, double percentage = 0.3}) {
+      {@required Map<String, int> checkedSet, @required double minPercentage}) {
     final json = jsonEncode({
       'set': checkedSet..removeWhere((key, value) => value == 0),
-      'percentage': percentage
+      'minPercentage': minPercentage
     });
     return _updateStatus(host, 'configure', json);
   }
