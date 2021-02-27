@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'widgets/change_timeout_alert.dart';
-import 'widgets/status_indicator.dart';
-import '../../../models/device.dart';
-import '../../../providers.dart';
-import '../device/device_screen.dart';
-import 'widgets/add_device_alert.dart';
+import '../../library/providers/config_providers.dart';
+import '../../library/providers/app_providers.dart';
+import 'views/change_timeout_alert.dart';
+import '../streaming/device_screen.dart';
+import '../../library/models/device.dart';
 
-final timeoutSecondsConfigProvider = StateProvider((ref) => 3);
+import 'views/add_device_alert.dart';
+import 'views/status_indicator.dart';
 
 class ConnectScreen extends StatelessWidget {
   const ConnectScreen();

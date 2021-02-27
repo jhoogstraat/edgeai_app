@@ -1,14 +1,14 @@
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 
+/// Paints a [ui.Image]
 class ImagePainter extends CustomPainter {
-  final ui.Image image;
-
   ImagePainter(this.image);
+
+  final ui.Image image;
 
   @override
   void paint(Canvas canvas, Size size) {
-    // canvas.drawImage(image, Offset.zero, Paint());
     paintImage(
         canvas: canvas,
         rect: Rect.fromLTWH(0, 0, size.width, size.height),
@@ -16,7 +16,6 @@ class ImagePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant ImagePainter oldDelegate) {
-    return oldDelegate.image != image;
-  }
+  bool shouldRepaint(covariant ImagePainter oldDelegate) =>
+      oldDelegate.image != image;
 }

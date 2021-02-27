@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../connect_screen.dart';
+import '../../../library/providers/config_providers.dart';
 
 class ChangeTimeoutAlert extends StatelessWidget {
   const ChangeTimeoutAlert({

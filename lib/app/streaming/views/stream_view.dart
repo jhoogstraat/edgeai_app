@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../painters/aimage_painter.dart';
-
-import '../../../../providers.dart';
+import '../../../library/providers/app_providers.dart';
+import '../../common/custom_painters/aimage_painter.dart';
 
 final _setCompleteIndicator = ValueNotifier<Color>(Colors.transparent);
 

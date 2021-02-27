@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../sets/sets_screen.dart';
-import '../../../services/api.dart';
-import '../../../providers.dart';
-import 'widgets/property_view.dart';
-import 'widgets/stream_view.dart';
-
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import 'widgets/feature_stepper.dart';
-import 'widgets/zoom_route.dart';
+import '../../library/providers/app_providers.dart';
+import '../../library/services/api.dart';
+import '../set_history/sets_screen.dart';
+import 'views/feature_stepper.dart';
+import 'views/property_view.dart';
+import 'views/stream_view.dart';
+import 'views/stream_zoom.dart';
 
 /// Owned by [DeviceScreen].
 /// Disables buttons when starting/stopping the service.
@@ -45,7 +44,7 @@ class DeviceScreen extends StatelessWidget {
                   child: StreamView(
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ZoomRoute()),
+                      MaterialPageRoute(builder: (context) => StreamZoom()),
                     ),
                   ),
                 ),

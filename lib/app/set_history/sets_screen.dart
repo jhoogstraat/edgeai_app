@@ -1,26 +1,7 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers.dart';
-
-class ImagePainter extends CustomPainter {
-  final ui.Image image;
-
-  ImagePainter(this.image);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    paintImage(
-        canvas: canvas,
-        rect: Rect.fromLTWH(0, 0, size.width, size.height),
-        image: image);
-  }
-
-  @override
-  bool shouldRepaint(covariant ImagePainter oldDelegate) {
-    return oldDelegate.image != image;
-  }
-}
+import 'package:obj_detect_board/library/providers/app_providers.dart';
+import '../common/custom_painters/image_painter.dart';
 
 class SetsScreen extends StatelessWidget {
   const SetsScreen();

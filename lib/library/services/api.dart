@@ -26,7 +26,7 @@ class Api {
                 .enableForceNewConnection()
                 .build());
 
-  Future<Status> startStream() async {
+  Future<Status> startService() async {
     final response = await http.get(Uri.http('$host:5000', 'start'));
     final status = Status.fromJson(jsonDecode(response.body));
     return status;

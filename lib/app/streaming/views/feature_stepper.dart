@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../providers.dart';
+
+import '../../../library/providers/app_providers.dart';
 
 class FeatureStepper extends StatelessWidget {
   final String featureId;

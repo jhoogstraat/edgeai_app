@@ -1,15 +1,14 @@
 import 'package:flutter/foundation.dart';
 
 class CheckedSetNotifier {
+  CheckedSetNotifier(Iterable<String> keys, Map<String, int> checkedSet)
+      : _notifiers = Map<String, ValueNotifier<int>>.fromIterable(keys,
+            value: (key) => ValueNotifier<int>(checkedSet[key] ?? 0));
+
   final Map<String, ValueNotifier<int>> _notifiers;
 
   Map<String, int> get newCheckedSet =>
       _notifiers.map((key, value) => MapEntry(key, value.value));
-
-  CheckedSetNotifier(
-      [Iterable<String> keys, Map<String, int> checkedSet = const {}])
-      : _notifiers = Map<String, ValueNotifier<int>>.fromIterable(keys,
-            value: (key) => ValueNotifier<int>(checkedSet[key] ?? 0));
 
   ValueNotifier<int> listen(String feature) {
     return _notifiers[feature];

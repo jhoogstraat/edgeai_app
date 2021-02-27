@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'stream_view.dart';
 
-class ZoomRoute extends StatelessWidget {
-  const ZoomRoute();
+class StreamZoom extends StatelessWidget {
+  const StreamZoom();
 
   @override
   Widget build(BuildContext context) {

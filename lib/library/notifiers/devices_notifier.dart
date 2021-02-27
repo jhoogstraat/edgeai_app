@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../app/screens/connect/connect_screen.dart';
+import '../providers/config_providers.dart';
+import '../providers/service_providers.dart';
 import '../models/device.dart';
-
-import '../providers.dart';
 
 class DevicesNotifier extends ChangeNotifier {
   // State

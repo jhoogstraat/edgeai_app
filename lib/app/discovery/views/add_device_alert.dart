@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../../providers.dart';
+import 'package:obj_detect_board/library/providers/app_providers.dart';
 
 class AddDeviceAlert extends StatelessWidget {
   AddDeviceAlert({
