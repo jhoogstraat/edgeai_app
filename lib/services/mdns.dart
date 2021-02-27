@@ -1,17 +1,18 @@
 import 'dart:io';
+
 import 'package:multicast_dns/multicast_dns.dart';
 import '../models/device.dart';
 
 class MDNSService {
   // Fix for Android (https://github.com/flutter/flutter/issues/55173#issuecomment-655051797)
-  final client = MDnsClient(
-      rawDatagramSocketFactory: (dynamic host, int port,
-              {bool reuseAddress, bool reusePort, int ttl}) =>
-          RawDatagramSocket.bind(host, port,
-              reuseAddress: true, reusePort: false, ttl: ttl));
+
+  final client = MDnsClient();
 
   Future<List<Device>> discoverDevices(
       [Duration timeout = const Duration(seconds: 1)]) async {
+    // Does not work on iOS currently.
+    // Patching multicast_dns.dart is necessary.
+    // See: https://github.com/dart-lang/sdk/issues/42250#issuecomment-759026385
     await client.start();
 
     final devices = await client
