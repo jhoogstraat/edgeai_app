@@ -1,16 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../library/providers/config_providers.dart';
+import 'package:obj_detect_board/library/models/status.dart';
+import 'package:obj_detect_board/library/providers/config_providers.dart';
 import '../../library/providers/app_providers.dart';
-import 'views/change_timeout_alert.dart';
+import 'views/change_timeout_dialog.dart';
 import '../streaming/device_screen.dart';
 import '../../library/models/device.dart';
 
-import 'views/add_device_alert.dart';
+import 'views/add_device_dialog.dart';
 import 'views/status_indicator.dart';
 
 class ConnectScreen extends StatelessWidget {
-  const ConnectScreen();
+  const ConnectScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,34 +23,35 @@ class ConnectScreen extends StatelessWidget {
           final devices = watch(devicesProvider);
           return devices.isInitialized
               ? Text('${devices.devices.length} Gerät(e) gefunden')
-              : Text('Suche nach Geräten...');
+              : const Text('Suche nach Geräten...');
         }),
         actions: [
           IconButton(
               icon: const Icon(Icons.timelapse),
-              onPressed: () => _timoutConfigButtonPress(context)),
+              onPressed: () => _timeoutConfigButtonPress(context)),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (_) => AddDeviceAlert(),
+              builder: (_) => AddDeviceDialog(),
             ),
           ),
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: () => context.read(devicesProvider).refresh(),
+        onRefresh: context.read(devicesProvider).refresh,
         child: Consumer(
           builder: (context, watch, child) {
             final state = watch(devicesProvider);
 
             if (!state.isInitialized) {
-              return Center(child: CircularProgressIndicator(strokeWidth: 2));
+              return Center(
+                child: const CircularProgressIndicator(strokeWidth: 2),
+              );
             }
 
             return ListView.separated(
-              physics: AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) => ListTile(
                 title: Text(state.devices[index].name),
                 onTap: () => _deviceTilePress(context, state.devices[index]),
@@ -62,39 +66,56 @@ class ConnectScreen extends StatelessWidget {
     );
   }
 
+  ///
+  Future<void> _timeoutConfigButtonPress(BuildContext context) async {
+    final sliderValue = ValueNotifier(
+      context.read(timeoutSecondsConfigProvider).state.toDouble(),
+    );
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return ChangeTimeoutDialog(sliderValue: sliderValue);
+      },
+    );
+
+    context.read(timeoutSecondsConfigProvider).state =
+        sliderValue.value.toInt();
+  }
+
+  ///
   void _deviceTilePress(BuildContext context, Device device) {
     context.read(deviceStatusProvider(device)).when(
-          data: (status) async {
-            context.read(selectedDeviceProvider).state = device;
-            context.read(selectedDeviceStatusProvider).state = status;
-
-            await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const DeviceScreen()),
-            );
-
-            context.read(devicesProvider).devices.forEach((device) {
-              context.refresh(deviceStatusProvider(device));
-            });
-          },
+          data: (status) => showStream(context, status, device),
           loading: () {},
-          error: (error, stack) => showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Fehler'),
-              content: Text(error.toString()),
-            ),
-          ),
+          error: (error, stack) => showError(context, error, stack),
         );
   }
 
-  void _timoutConfigButtonPress(BuildContext context) {
-    final textController = TextEditingController(
-        text: context.read(timeoutSecondsConfigProvider).state.toString());
+  ///
+  Future<void> showStream(
+      BuildContext context, Status status, Device device) async {
+    context.read(selectedDeviceProvider).state = device;
+    context.read(selectedDeviceStatusProvider).state = status;
 
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DeviceScreen()),
+    );
+
+    context.read(devicesProvider).devices.forEach((device) {
+      context.refresh(deviceStatusProvider(device));
+    });
+  }
+
+  ///
+  void showError(BuildContext context, Exception error, StackTrace stack) {
     showDialog(
-        context: context,
-        builder: (context) =>
-            ChangeTimeoutAlert(textController: textController));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Fehler'),
+        content: Text(error.toString()),
+      ),
+    );
   }
 }

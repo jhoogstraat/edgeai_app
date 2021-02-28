@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.obj_detect_board">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="obj_detect_board"
         android:icon="@mipmap/ic_launcher">

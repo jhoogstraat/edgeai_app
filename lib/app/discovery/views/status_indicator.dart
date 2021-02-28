@@ -7,24 +7,21 @@ class StatusIndicator extends StatelessWidget {
   StatusIndicator(this.device);
 
   final Device device;
-  static const size = 16.0;
+  static const _iconSize = 16.0;
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, watch, status) {
-      final statusFuture = watch(deviceStatusProvider(device));
-      return statusFuture.when(
+      return watch(deviceStatusProvider(device)).when(
         data: (status) => status.isRunning
-            ? const Icon(Icons.circle, color: Colors.green, size: size)
-            : const Icon(Icons.circle, color: Colors.red, size: size),
+            ? const Icon(Icons.circle, color: Colors.green, size: _iconSize)
+            : const Icon(Icons.circle, color: Colors.red, size: _iconSize),
         loading: () => SizedBox(
-          width: size,
-          height: size,
-          child: Center(
-            child: const CircularProgressIndicator(strokeWidth: 2),
-          ),
+          width: _iconSize,
+          height: _iconSize,
+          child: Center(child: const CircularProgressIndicator(strokeWidth: 2)),
         ),
-        error: (error, stack) => Icon(Icons.error, size: 16),
+        error: (error, stack) => const Icon(Icons.error, size: _iconSize),
       );
     });
   }

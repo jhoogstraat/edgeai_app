@@ -5,10 +5,9 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../../library/providers/app_providers.dart';
 import '../../library/services/api.dart';
 import '../set_history/sets_screen.dart';
-import 'views/feature_stepper.dart';
+import 'views/config_dialog.dart';
 import 'views/property_view.dart';
 import 'views/stream_view.dart';
-import 'views/stream_zoom.dart';
 
 /// Owned by [DeviceScreen].
 /// Disables buttons when starting/stopping the service.
@@ -21,7 +20,7 @@ class DeviceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sets'),
+        title: const Text('Sets'),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
@@ -34,22 +33,9 @@ class DeviceScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.zero,
-              child: Hero(
-                tag: 'frame',
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: StreamView(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => StreamZoom()),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          Hero(
+            tag: 'frame',
+            child: const StreamView(),
           ),
           Expanded(
             child: Consumer(
@@ -99,9 +85,9 @@ class DeviceScreen extends StatelessWidget {
                         onPressed: viewModel.state
                             ? null
                             : () => _toggleRunningButtonPress(context),
-                        icon: Icon(status.state.isRunning
-                            ? Icons.stop
-                            : Icons.play_arrow),
+                        icon: status.state.isRunning
+                            ? const Icon(Icons.stop)
+                            : const Icon(Icons.play_arrow),
                         label: Text(
                             status.state.isRunning ? 'Stoppen' : 'Starten')),
                     ElevatedButton.icon(
@@ -144,86 +130,7 @@ class DeviceScreen extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text('Konfigurieren'),
-        contentPadding: const EdgeInsets.fromLTRB(24, 20, 10, 24),
-        content: Consumer(
-          builder: (context, watch, child) {
-            // Makes sure the checkedSetProvider is disposed properly when the dialog is dismissed.
-            final state = watch(checkedSetProvider);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...status.state.labels.entries
-                    .map((e) => FeatureStepper(
-                          featureId: e.key,
-                          title: e.value,
-                          value: state.listen(e.key),
-                        ))
-                    .toList(),
-                Text('Min-Prozentsatz'),
-                ValueListenableBuilder(
-                  valueListenable: sliderValue,
-                  builder: (context, value, child) => Slider(
-                    value: value,
-                    divisions: 10,
-                    label: value.toString(),
-                    onChanged: (newValue) => sliderValue.value = newValue,
-                  ),
-                )
-              ],
-            );
-          },
-        ),
-        actions: [
-          ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Abbrechen')),
-          ElevatedButton(
-            onPressed: () => saveConfigButtonPressed(
-                context,
-                context.read(checkedSetProvider).newCheckedSet,
-                sliderValue.value),
-            child: Text('Speichern'),
-          ),
-        ],
-      ),
+      builder: (context) => ConfigDialog(sliderValue: sliderValue),
     );
-  }
-
-  Future<void> saveConfigButtonPressed(BuildContext context,
-      Map<String, int> checkedSet, double minPercentage) async {
-    final host = context.read(selectedDeviceProvider).state.ip;
-    final status = await Api.configure(host,
-        checkedSet: checkedSet, minPercentage: minPercentage);
-    context.read(selectedDeviceStatusProvider).state = status;
-    Navigator.pop(context);
-  }
-}
-
-class FeatureSetListView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, watch, child) {
-        final featureSets = watch(featureSetsProvider);
-        return ListView.separated(
-            itemBuilder: (context, index) => ListTile(
-                  title: Text('Set ${featureSets[index].timestamp} - ' +
-                      (featureSets[index].isComplete
-                          ? 'vollständig'
-                          : 'unvollständig')),
-                  // trailing: mage.memory(featureSets[index].referenceFrame),
-                  onTap: () => showSetDetail(context),
-                ),
-            separatorBuilder: (_, __) => Divider(),
-            itemCount: featureSets.length);
-      },
-    );
-  }
-
-  void showSetDetail(BuildContext context) {
-    showCupertinoModalBottomSheet(
-        context: context, builder: (context) => Container());
   }
 }

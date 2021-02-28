@@ -5,14 +5,25 @@ import 'package:flutter/rendering.dart';
 import 'package:obj_detect_board/library/models/ai_image.dart';
 
 class AIImagePainter extends CustomPainter {
-  AIImagePainter(this.aiImage);
+  AIImagePainter(this.aiImage, [this.isSetComplete]);
 
   AIImage aiImage;
+  bool isSetComplete;
 
   static final _detectionBBoxPaint = Paint()
     ..color = Colors.red
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
+
+  static final _setCompleteIndicatorPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Colors.green
+    ..strokeWidth = 7;
+
+  static final _setIncompleteIndicatorPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..color = Colors.red
+    ..strokeWidth = 7;
 
   static final _scoreTextStyle = TextStyle(
     color: Colors.red,
@@ -39,6 +50,14 @@ class AIImagePainter extends CustomPainter {
         text: textSpan,
         textDirection: TextDirection.ltr,
       );
+
+      if (isSetComplete != null) {
+        canvas.drawRect(
+            Rect.fromLTWH(3.5, 3.5, size.width - 7, size.height - 7),
+            isSetComplete
+                ? _setCompleteIndicatorPaint
+                : _setIncompleteIndicatorPaint);
+      }
 
       textPainter.layout();
       textPainter.paint(

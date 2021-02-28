@@ -10,7 +10,7 @@ class SetsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sets'),
+        title: const Text('Sets'),
         actions: [
           IconButton(
               icon: const Icon(Icons.delete_forever),
