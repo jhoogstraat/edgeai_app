@@ -1,13 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:obj_detect_board/library/models/status.dart';
-import 'package:obj_detect_board/library/providers/config_providers.dart';
-import '../../library/providers/app_providers.dart';
+import '../streaming/streaming_screen.dart';
+import '../../../library/models/status.dart';
+import '../../../library/providers/config_providers.dart';
+
+import '../../../library/providers/app_providers.dart';
 import 'views/change_timeout_dialog.dart';
-import '../streaming/device_screen.dart';
-import '../../library/models/device.dart';
+import '../../../library/models/device.dart';
 
 import 'views/add_device_dialog.dart';
 import 'views/status_indicator.dart';
@@ -69,7 +68,7 @@ class ConnectScreen extends StatelessWidget {
   ///
   Future<void> _timeoutConfigButtonPress(BuildContext context) async {
     final sliderValue = ValueNotifier(
-      context.read(timeoutSecondsConfigProvider).state.toDouble(),
+      context.read(discoveryTimeoutProvider).state.toDouble(),
     );
 
     await showDialog(
@@ -79,8 +78,7 @@ class ConnectScreen extends StatelessWidget {
       },
     );
 
-    context.read(timeoutSecondsConfigProvider).state =
-        sliderValue.value.toInt();
+    context.read(discoveryTimeoutProvider).state = sliderValue.value.toInt();
   }
 
   ///
@@ -100,7 +98,7 @@ class ConnectScreen extends StatelessWidget {
 
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const DeviceScreen()),
+      MaterialPageRoute(builder: (context) => const StreamingScreen()),
     );
 
     context.read(devicesProvider).devices.forEach((device) {
@@ -109,7 +107,7 @@ class ConnectScreen extends StatelessWidget {
   }
 
   ///
-  void showError(BuildContext context, Exception error, StackTrace stack) {
+  void showError(BuildContext context, Object error, StackTrace stack) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

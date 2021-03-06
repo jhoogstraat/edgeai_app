@@ -76,7 +76,7 @@ class Api {
       'set': checkedSet..removeWhere((key, value) => value == 0),
       'minPercentage': minPercentage
     });
-    return _updateStatus(host, 'configure', json);
+    return _updateStatus(host, 'configureUsecase', json);
   }
 
   void dispose() {

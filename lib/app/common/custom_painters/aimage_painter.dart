@@ -2,13 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:obj_detect_board/library/models/ai_image.dart';
+import '../../../library/models/ai_image.dart';
 
 class AIImagePainter extends CustomPainter {
-  AIImagePainter(this.aiImage, [this.isSetComplete]);
+  AIImagePainter(this.aiImage, this.labels, [this.isSetComplete]);
 
   AIImage aiImage;
   bool isSetComplete;
+  Map<String, String> labels;
 
   static final _detectionBBoxPaint = Paint()
     ..color = Colors.red
@@ -42,7 +43,7 @@ class AIImagePainter extends CustomPainter {
       canvas.drawRect(obj.bbox, _detectionBBoxPaint);
 
       final textSpan = TextSpan(
-        text: '(${(obj.score * 100).toInt()}%)',
+        text: '${labels[obj.id.toString()]} (${(obj.score * 100).toInt()}%)',
         style: _scoreTextStyle,
       );
 

@@ -8,9 +8,10 @@ class Status {
   final Map<String, int> checkedSet;
   final double minPercentage;
   final bool isRunning;
+  final String model;
 
   Status(this.isRunning, this.frameSize, this.frameSizeCropped, this.inputSize,
-      this.labels, this.checkedSet, this.minPercentage);
+      this.labels, this.checkedSet, this.minPercentage, this.model);
 
   factory Status.fromJson(Map<String, dynamic> json) {
     final isRunning = json['isRunning'];
@@ -20,9 +21,10 @@ class Status {
     final labels = json['labels'].cast<String, String>();
     final checkedSet = json['usecase']['set'].cast<String, int>();
     final minPercentage = json['usecase']['minPercentage'];
+    final model = json['model'].replaceFirst('models/', '');
 
     return Status(isRunning, frameSizeOriginal, frameSizeCropped, inputSize,
-        labels, checkedSet, minPercentage);
+        labels, checkedSet, minPercentage, model);
   }
 
   static Size sizeFrom(dynamic json) {

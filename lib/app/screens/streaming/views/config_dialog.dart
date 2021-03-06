@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:obj_detect_board/library/providers/app_providers.dart';
-import 'package:obj_detect_board/library/services/api.dart';
+import '../../../../library/providers/app_providers.dart';
+import '../../../../library/services/api.dart';
 
 import 'feature_stepper.dart';
 

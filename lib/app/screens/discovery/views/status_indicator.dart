@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../library/providers/app_providers.dart';
-import '../../../library/models/device.dart';
+import '../../../../library/providers/app_providers.dart';
+import '../../../../library/models/device.dart';
 
 class StatusIndicator extends StatelessWidget {
   StatusIndicator(this.device);

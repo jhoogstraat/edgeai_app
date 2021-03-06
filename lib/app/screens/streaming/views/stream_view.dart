@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../library/providers/app_providers.dart';
-import '../../common/custom_painters/aimage_painter.dart';
+import '../../../../library/providers/app_providers.dart';
+import '../../../common/custom_painters/aimage_painter.dart';
 
 class StreamView extends StatelessWidget {
   const StreamView();
@@ -30,7 +30,8 @@ class StreamView extends StatelessWidget {
                 data: (data) => status.isRunning
                     ? RepaintBoundary(
                         child: CustomPaint(
-                          painter: AIImagePainter(data, _setCompleteIndicator),
+                          painter: AIImagePainter(
+                              data, status.labels, _setCompleteIndicator),
                           willChange: true,
                         ),
                       )
