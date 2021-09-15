@@ -14,7 +14,7 @@ class AIImage {
 
     return AIImage(
       frame.image,
-      json['objects'].map<Feature>((obj) => Feature.fromJson(obj)).toList(),
+      json['objects'].map((obj) => Feature.fromJson(obj)).toList(),
     );
   }
 

@@ -8,15 +8,30 @@ import '../models/status.dart';
 import 'service_providers.dart';
 import '../services/api.dart';
 
+/// Fetches the status of a given [Device].
 final deviceStatusProvider = FutureProvider.autoDispose
     .family<Status, Device>((ref, device) => Api.fetchStatus(device.ip));
 
-final selectedDeviceProvider = StateProvider<Device>((ref) => null);
-final selectedDeviceStatusProvider = StateProvider<Status>((ref) => null);
+/// State holder of the user-selected [Device].
+///
+/// Set from UI by the user!
+final selectedDeviceProvider = StateProvider<Device>(
+  (ref) => throw UnimplementedError(),
+);
 
+/// This is different to [deviceStatusProvider] in that it provides the [Status]
+/// of the currently selected device.
+///
+/// Set from UI, to allow synchronous access
+/// to the current [Device]s [Status].
+final selectedDeviceStatusProvider =
+    StateProvider<Status>((ref) => throw UnimplementedError());
+
+/// Provides video frames coming from the edge device.
 final frameProvider = StreamProvider.autoDispose<AIImage>(
     (ref) => ref.watch(apiProvider).listenFrames());
 
+///
 final checkedSetProvider = Provider.autoDispose<CheckedSetNotifier>(
   (ref) {
     final status = ref.read(selectedDeviceStatusProvider).state;
@@ -24,9 +39,11 @@ final checkedSetProvider = Provider.autoDispose<CheckedSetNotifier>(
   },
 );
 
-final devicesProvider =
-    ChangeNotifierProvider((ref) => DevicesNotifier(ref.read));
+final devicesProvider = ChangeNotifierProvider(
+  (ref) => DevicesNotifier(ref.read),
+);
 
 final featureSetsProvider =
-    ChangeNotifierProvider.autoDispose<FeatureSetsNotifier>((ref) =>
-        FeatureSetsNotifier(ref.watch(apiProvider).listenFeatureSets()));
+    ChangeNotifierProvider.autoDispose<FeatureSetsNotifier>(
+  (ref) => FeatureSetsNotifier(ref.watch(apiProvider).listenFeatureSets()),
+);

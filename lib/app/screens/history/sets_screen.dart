@@ -3,23 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../library/providers/app_providers.dart';
 import '../../common/custom_painters/image_painter.dart';
 
-class SetsScreen extends StatelessWidget {
-  const SetsScreen();
+class SetsScreen extends ConsumerWidget {
+  const SetsScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sets'),
         actions: [
           IconButton(
               icon: const Icon(Icons.delete_forever),
-              onPressed: () => context.read(featureSetsProvider).clear())
+              onPressed: () => ref.read(featureSetsProvider).clear())
         ],
       ),
       body: Consumer(
-        builder: (context, watch, child) {
-          final sets = watch(featureSetsProvider);
+        builder: (context, ref, child) {
+          final sets = ref.watch(featureSetsProvider);
 
           return ListView.separated(
               itemBuilder: (context, index) {
@@ -36,7 +36,7 @@ class SetsScreen extends StatelessWidget {
                       painter: ImagePainter(featureSet.referenceFrame),
                     ),
                   ),
-                  trailing: Container(
+                  trailing: SizedBox(
                     height: double.infinity,
                     child: featureSet.isComplete
                         ? const Icon(Icons.check_circle_outline,
@@ -45,7 +45,7 @@ class SetsScreen extends StatelessWidget {
                   ),
                 );
               },
-              separatorBuilder: (_, __) => Divider(height: 1),
+              separatorBuilder: (_, __) => const Divider(height: 1),
               itemCount: sets.length);
         },
       ),

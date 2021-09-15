@@ -1,57 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../library/notifiers/feature_set_notifier.dart';
 import '../../../../library/providers/app_providers.dart';
 import '../../../common/custom_painters/aimage_painter.dart';
 
-class StreamView extends StatelessWidget {
-  const StreamView();
+class StreamView extends ConsumerWidget {
+  const StreamView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final status = context.read(selectedDeviceStatusProvider).state;
-    bool _setCompleteIndicator;
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool? _setCompleteIndicator;
 
-    return ProviderListener(
-      provider: featureSetsProvider,
-      onChange: (context, featureSets) {
-        _setCompleteIndicator = featureSets.last.isComplete;
-        Future.delayed(
-            const Duration(seconds: 1), () => _setCompleteIndicator = null);
-      },
-      child: FittedBox(
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: status.frameSizeCropped.width,
-          height: status.frameSizeCropped.height,
-          child: Consumer(
-            builder: (context, watch, child) {
-              final status = watch(selectedDeviceStatusProvider).state;
-              return watch(frameProvider).when(
-                data: (data) => status.isRunning
-                    ? RepaintBoundary(
-                        child: CustomPaint(
-                          painter: AIImagePainter(
-                              data, status.labels, _setCompleteIndicator),
-                          willChange: true,
+    ref.listen(featureSetsProvider, (FeatureSetsNotifier featureSets) {
+      _setCompleteIndicator = featureSets.last.isComplete;
+      Future.delayed(
+        const Duration(seconds: 1),
+        () => _setCompleteIndicator = null,
+      );
+    });
+
+    final status = ref.read(selectedDeviceStatusProvider).state;
+    return FittedBox(
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: status.frameSizeCropped.width,
+        height: status.frameSizeCropped.height,
+        child: ref.watch(frameProvider).when(
+              data: (data) => status.isRunning
+                  ? RepaintBoundary(
+                      child: CustomPaint(
+                        painter: AIImagePainter(
+                          data,
+                          status.labels,
+                          _setCompleteIndicator,
+                        ),
+                        willChange: true,
+                      ),
+                    )
+                  : Center(child: _buildInactiveText(context)),
+              loading: () => Center(
+                child: status.isRunning
+                    ? const SizedBox(
+                        width: 70,
+                        height: 70,
+                        child: RepaintBoundary(
+                          child: CircularProgressIndicator(),
                         ),
                       )
-                    : Center(child: _buildInactiveText(context)),
-                loading: () => Center(
-                  child: status.isRunning
-                      ? SizedBox(
-                          width: 70,
-                          height: 70,
-                          child: RepaintBoundary(
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : _buildInactiveText(context),
-                ),
-                error: (error, _) => throw error,
-              );
-            },
-          ),
-        ),
+                    : _buildInactiveText(context),
+              ),
+              error: (error, _) => throw error,
+            ),
       ),
     );
   }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../library/providers/app_providers.dart';
 
-class AddDeviceDialog extends StatelessWidget {
+class AddDeviceDialog extends ConsumerWidget {
   AddDeviceDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final _ipv4Regex = RegExp(
@@ -13,7 +13,7 @@ class AddDeviceDialog extends StatelessWidget {
   final _dialogButtonEnabled = ValueNotifier(false);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       title: const Text('Manuell hinzufügen'),
       content: TextField(
@@ -28,9 +28,9 @@ class AddDeviceDialog extends StatelessWidget {
             child: const Text('Abbrechen')),
         ValueListenableBuilder(
           valueListenable: _dialogButtonEnabled,
-          builder: (_, enable, child) => TextButton(
-            onPressed: enable ? () => _submitButtonPress(context) : null,
-            child: child,
+          builder: (_, dynamic enable, child) => TextButton(
+            onPressed: enable ? () => _submitButtonPress(context, ref) : null,
+            child: child!,
           ),
           child: const Text('Hinzufügen'),
         )
@@ -38,8 +38,8 @@ class AddDeviceDialog extends StatelessWidget {
     );
   }
 
-  void _submitButtonPress(BuildContext context) {
-    context.read(devicesProvider).addDevice(_ipTextController.text);
+  void _submitButtonPress(BuildContext context, WidgetRef ref) {
+    ref.read(devicesProvider).addDevice(_ipTextController.text);
     Navigator.pop(context);
   }
 }

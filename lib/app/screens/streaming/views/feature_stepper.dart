@@ -3,41 +3,39 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../library/providers/app_providers.dart';
 
-class FeatureStepper extends StatelessWidget {
+class FeatureStepper extends ConsumerWidget {
   final String featureId;
   final String title;
-  final ValueNotifier<int> value;
+  final ValueNotifier<int>? value;
 
   const FeatureStepper({
-    @required this.title,
-    @required this.featureId,
-    @required this.value,
-    Key key,
+    required this.title,
+    required this.featureId,
+    required this.value,
+    Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Icon(Icons.add);
-    Icon(Icons.remove);
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
         Text(title),
-        Expanded(child: SizedBox()),
+        const Expanded(child: SizedBox()),
         ElevatedButton(
-            onPressed: () =>
-                context.read(checkedSetProvider).decrement(featureId),
-            child: Icon(Icons.remove),
+            onPressed: () => ref.read(checkedSetProvider).decrement(featureId),
+            child: const Icon(Icons.remove),
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(3), minimumSize: const Size(10, 5))),
+              padding: const EdgeInsets.all(3),
+              minimumSize: const Size(10, 5),
+            )),
         ValueListenableBuilder(
-            valueListenable: value,
-            builder: (_, value, __) => Text(value.toString())),
+            valueListenable: value!,
+            builder: (_, dynamic value, __) => Text(value.toString())),
         ElevatedButton(
-          onPressed: () =>
-              context.read(checkedSetProvider).increment(featureId),
-          child: Icon(Icons.add),
+          onPressed: () => ref.read(checkedSetProvider).increment(featureId),
+          child: const Icon(Icons.add),
           style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.all(3),
+            padding: const EdgeInsets.all(3),
             minimumSize: const Size(10, 5),
           ),
         ),

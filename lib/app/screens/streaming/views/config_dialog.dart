@@ -6,9 +6,9 @@ import '../../../../library/services/api.dart';
 import 'feature_stepper.dart';
 
 class ConfigDialog extends StatelessWidget {
-  const ConfigDialog({Key key, @required this.sliderValue}) : super(key: key);
+  const ConfigDialog({Key? key, required this.sliderValue}) : super(key: key);
 
-  final ValueNotifier<double> sliderValue;
+  final ValueNotifier<double?> sliderValue;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class ConfigDialog extends StatelessWidget {
       title: const Text('Konfigurieren'),
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 10, 24),
       content: Consumer(
-        builder: (context, watch, child) {
+        builder: (context, ref, child) {
           // Makes sure the checkedSetProvider is disposed properly when the dialog is dismissed.
-          final state = watch(checkedSetProvider);
-          final status = context.read(selectedDeviceStatusProvider).state;
+          final state = ref.watch(checkedSetProvider);
+          final status = ref.read(selectedDeviceStatusProvider).state;
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -33,7 +33,7 @@ class ConfigDialog extends StatelessWidget {
               const Text('Min-Prozentsatz'),
               ValueListenableBuilder(
                 valueListenable: sliderValue,
-                builder: (context, value, child) => Slider(
+                builder: (context, dynamic value, child) => Slider(
                   value: value,
                   divisions: 10,
                   label: value.toString(),
@@ -48,23 +48,23 @@ class ConfigDialog extends StatelessWidget {
         ElevatedButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Abbrechen')),
-        ElevatedButton(
-          onPressed: () => saveConfigButtonPress(
-              context,
-              context.read(checkedSetProvider).newCheckedSet,
-              sliderValue.value),
-          child: const Text('Speichern'),
-        ),
+        Consumer(builder: (context, ref, child) {
+          return ElevatedButton(
+            onPressed: () => saveConfigButtonPress(context, ref,
+                ref.read(checkedSetProvider).newCheckedSet, sliderValue.value),
+            child: const Text('Speichern'),
+          );
+        }),
       ],
     );
   }
 
-  Future<void> saveConfigButtonPress(BuildContext context,
-      Map<String, int> checkedSet, double minPercentage) async {
-    final host = context.read(selectedDeviceProvider).state.ip;
+  Future<void> saveConfigButtonPress(BuildContext context, WidgetRef ref,
+      Map<String, int> checkedSet, double? minPercentage) async {
+    final host = ref.read(selectedDeviceProvider).state.ip;
     final status = await Api.configure(host,
         checkedSet: checkedSet, minPercentage: minPercentage);
-    context.read(selectedDeviceStatusProvider).state = status;
+    ref.read(selectedDeviceStatusProvider).state = status;
     Navigator.pop(context);
   }
 }

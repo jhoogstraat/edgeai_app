@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ChangeTimeoutDialog extends StatelessWidget {
   const ChangeTimeoutDialog({
-    Key key,
-    @required this.sliderValue,
+    Key? key,
+    required this.sliderValue,
   }) : super(key: key);
 
   final ValueNotifier<double> sliderValue;

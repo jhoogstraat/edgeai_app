@@ -12,16 +12,16 @@ import 'views/stream_view.dart';
 /// Disables buttons when starting/stopping the service.
 final _viewModelProvider = StateProvider.autoDispose((ref) => false);
 
-class StreamingScreen extends StatelessWidget {
-  const StreamingScreen({Key key}) : super(key: key);
+class StreamingScreen extends ConsumerWidget {
+  const StreamingScreen({Key? key}) : super(key: key);
 
   static const _bodyPadding = 20.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.read(selectedDeviceProvider).state.name),
+        title: Text(ref.read(selectedDeviceProvider).state.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
@@ -39,12 +39,12 @@ class StreamingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: _bodyPadding),
               child: Consumer(
-                builder: (context, watch, child) {
-                  final status = watch(selectedDeviceStatusProvider).state;
+                builder: (context, ref, child) {
+                  final status = ref.watch(selectedDeviceStatusProvider).state;
 
                   return GridView.count(
                     crossAxisCount: 2,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
                     childAspectRatio: 3.0,
@@ -75,9 +75,9 @@ class StreamingScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: _bodyPadding, vertical: 8.0),
             child: Consumer(
-              builder: (context, watch, child) {
-                final viewModel = watch(_viewModelProvider);
-                final status = context.read(selectedDeviceStatusProvider);
+              builder: (context, ref, child) {
+                final viewModel = ref.watch(_viewModelProvider);
+                final status = ref.watch(selectedDeviceStatusProvider);
 
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -88,7 +88,7 @@ class StreamingScreen extends StatelessWidget {
                       child: ElevatedButton(
                           onPressed: viewModel.state
                               ? null
-                              : () => _configureButtonPress(context),
+                              : () => _configureButtonPress(context, ref),
                           child: const Text('Konfigurieren')),
                     ),
                     SizedBox(
@@ -96,7 +96,7 @@ class StreamingScreen extends StatelessWidget {
                       child: ElevatedButton(
                           onPressed: viewModel.state
                               ? null
-                              : () => _toggleRunningButtonPress(context),
+                              : () => _toggleRunningButtonPress(ref),
                           child: Text(
                               status.state.isRunning ? 'Stoppen' : 'Starten')),
                     ),
@@ -110,25 +110,23 @@ class StreamingScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _toggleRunningButtonPress(BuildContext context) async {
-    final viewModel = context.read(_viewModelProvider);
-    final status = context.read(selectedDeviceStatusProvider);
+  Future<void> _toggleRunningButtonPress(WidgetRef ref) async {
+    final viewModel = ref.read(_viewModelProvider);
+    final status = ref.read(selectedDeviceStatusProvider);
 
     viewModel.state = true;
 
     if (!status.state.isRunning) {
-      status.state =
-          await Api.start(context.read(selectedDeviceProvider).state.ip);
+      status.state = await Api.start(ref.read(selectedDeviceProvider).state.ip);
     } else {
-      status.state =
-          await Api.stop(context.read(selectedDeviceProvider).state.ip);
+      status.state = await Api.stop(ref.read(selectedDeviceProvider).state.ip);
     }
 
     viewModel.state = false;
   }
 
-  void _configureButtonPress(BuildContext context) {
-    final status = context.read(selectedDeviceStatusProvider);
+  void _configureButtonPress(BuildContext context, WidgetRef ref) {
+    final status = ref.read(selectedDeviceStatusProvider.notifier);
     final sliderValue = ValueNotifier(status.state.minPercentage);
 
     showDialog(

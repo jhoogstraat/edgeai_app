@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PropertyView extends StatelessWidget {
-  final String title;
-  final String value;
+  final String? title;
+  final String? value;
 
-  const PropertyView({Key key, this.title, this.value}) : super(key: key);
+  const PropertyView({Key? key, this.title, this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,12 +12,12 @@ class PropertyView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          title!,
           style:
-              Theme.of(context).textTheme.bodyText2.apply(color: Colors.grey),
+              Theme.of(context).textTheme.bodyText2!.apply(color: Colors.grey),
         ),
         Text(
-          value,
+          value!,
           style: Theme.of(context).textTheme.subtitle2,
         ),
       ],

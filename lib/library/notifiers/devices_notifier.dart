@@ -21,7 +21,7 @@ class DevicesNotifier extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
-    final timeout = _read(discoveryTimeoutProvider).state;
+    final timeout = _read(discoveryTimeoutConfigProvider).state;
     _mdnsDevices =
         await _read(mdnsProvider).discoverDevices(Duration(seconds: timeout));
     _isInitialized = true;

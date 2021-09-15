@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import '../models/feature_set.dart';
 
 class FeatureSetsNotifier extends ChangeNotifier {

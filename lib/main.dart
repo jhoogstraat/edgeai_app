@@ -12,9 +12,13 @@ void main() async {
 }
 
 class ObjectDetectBoardApp extends StatelessWidget {
+  ObjectDetectBoardApp({Key? key}) : super(key: key);
+
   final theme = ThemeData.from(
-    colorScheme: ColorScheme.dark(
-        primary: const Color(0xff81c784), secondary: const Color(0xffefebe9)),
+    colorScheme: const ColorScheme.dark(
+      primary: Color(0xff81c784),
+      secondary: Color(0xffefebe9),
+    ),
   );
 
   @override

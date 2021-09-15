@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 
 import '../models/feature_set.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -56,7 +55,7 @@ class Api {
   }
 
   static Future<Status> _updateStatus(String host, String path,
-      [String json]) async {
+      [String? json]) async {
     final response = await http.post(Uri.http('$host:5000', path),
         body: json,
         headers: json == null
@@ -71,7 +70,7 @@ class Api {
       _fetchStatus(host, 'status');
 
   static Future<Status> configure(String host,
-      {@required Map<String, int> checkedSet, @required double minPercentage}) {
+      {required Map<String, int> checkedSet, required double? minPercentage}) {
     final json = jsonEncode({
       'set': checkedSet..removeWhere((key, value) => value == 0),
       'minPercentage': minPercentage

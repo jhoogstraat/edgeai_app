@@ -4,21 +4,21 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_riverpod: ^0.13.0-nullsafety
+  flutter_riverpod: ^1.0.0-dev
   socket_io_client: ^2.0.0-beta
-  http: ^0.13.0
-  modal_bottom_sheet: ^2.0.0-nullsafety.1
-  multicast_dns: ^0.2.2
-  logging: ^0.11.3+2
+  http: ^0.13.3
+  modal_bottom_sheet: ^2.0.0
+  multicast_dns: ^0.3.1
+  logging: ^1.0.2
 
 dev_dependencies:
-  pedantic: ^1.10.0
+  flutter_lints: ^1.0.4
   
   flutter_test:
     sdk: flutter

@@ -8,7 +8,7 @@ class MDNSService {
 
   Future<List<Device>> discoverDevices(
       [Duration timeout = const Duration(seconds: 1)]) async {
-    // Does not work on iOS currently.
+    // start() not work on iOS currently.
     // Patching multicast_dns.dart is necessary.
     // See: https://github.com/dart-lang/sdk/issues/42250#issuecomment-759026385
     await client.start();
@@ -28,7 +28,7 @@ class MDNSService {
         .toList()
       ..sort((a, b) => a.name.compareTo(b.name));
 
-    await client.stop();
+    client.stop();
     return devices;
   }
 }

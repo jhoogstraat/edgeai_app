@@ -8,7 +8,7 @@ class AIImagePainter extends CustomPainter {
   AIImagePainter(this.aiImage, this.labels, [this.isSetComplete]);
 
   AIImage aiImage;
-  bool isSetComplete;
+  bool? isSetComplete;
   Map<String, String> labels;
 
   static final _detectionBBoxPaint = Paint()
@@ -26,7 +26,7 @@ class AIImagePainter extends CustomPainter {
     ..color = Colors.red
     ..strokeWidth = 7;
 
-  static final _scoreTextStyle = TextStyle(
+  static const _scoreTextStyle = TextStyle(
     color: Colors.red,
     fontSize: 12,
   );
@@ -35,8 +35,6 @@ class AIImagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (aiImage == null || aiImage.frame == null) return;
-
     canvas.drawImage(aiImage.frame, Offset.zero, _emptyPaint);
 
     for (var obj in aiImage.features) {
@@ -55,7 +53,7 @@ class AIImagePainter extends CustomPainter {
       if (isSetComplete != null) {
         canvas.drawRect(
             Rect.fromLTWH(3.5, 3.5, size.width - 7, size.height - 7),
-            isSetComplete
+            isSetComplete!
                 ? _setCompleteIndicatorPaint
                 : _setIncompleteIndicatorPaint);
       }

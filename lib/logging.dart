@@ -10,7 +10,11 @@ void initLogger() {
 
 class RiverpodLogger extends ProviderObserver {
   @override
-  void didAddProvider(ProviderBase provider, Object value) {
+  void didAddProvider(
+    ProviderBase provider,
+    Object? value,
+    ProviderContainer container,
+  ) {
     print('''didAddProvider
 {
   "provider": "${provider.name ?? provider.runtimeType}",
@@ -19,7 +23,10 @@ class RiverpodLogger extends ProviderObserver {
   }
 
   @override
-  void didDisposeProvider(ProviderBase provider) {
+  void didDisposeProvider(
+    ProviderBase provider,
+    ProviderContainer containers,
+  ) {
     print('''didDisposeProvider
 {
   "provider": "${provider.name ?? provider.runtimeType}",
@@ -27,7 +34,12 @@ class RiverpodLogger extends ProviderObserver {
   }
 
   @override
-  void didUpdateProvider(ProviderBase provider, Object newValue) {
+  void didUpdateProvider(
+    ProviderBase provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
     print('''didUpdateProvider
 {
   "provider": "${provider.name ?? provider.runtimeType}",
