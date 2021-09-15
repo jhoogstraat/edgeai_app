@@ -61,7 +61,7 @@ class ConfigDialog extends StatelessWidget {
 
   Future<void> saveConfigButtonPress(BuildContext context, WidgetRef ref,
       Map<String, int> checkedSet, double? minPercentage) async {
-    final host = ref.read(selectedDeviceProvider).state.ip;
+    final host = ref.read(selectedDeviceProvider).state!.ip;
     final status = await Api.configure(host,
         checkedSet: checkedSet, minPercentage: minPercentage);
     ref.read(selectedDeviceStatusProvider).state = status;

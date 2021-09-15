@@ -83,20 +83,27 @@ class ConnectScreen extends ConsumerWidget {
     ref.read(deviceStatusProvider(device)).when(
           data: (status) => showStream(context, ref, status, device),
           loading: () {},
-          error: (error, stack) =>
-              showError(context, error as Exception, stack),
+          error: (error, stack) {
+            showError(context, error as Exception, stack);
+          },
         );
   }
 
   ///
   Future<void> showStream(
-      BuildContext context, WidgetRef ref, Status status, Device device) async {
+    BuildContext context,
+    WidgetRef ref,
+    Status status,
+    Device device,
+  ) async {
     ref.read(selectedDeviceProvider).state = device;
     ref.read(selectedDeviceStatusProvider).state = status;
 
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const StreamingScreen()),
+      MaterialPageRoute(
+        builder: (context) => const StreamingScreen(),
+      ),
     );
 
     ref.read(devicesProvider).devices.forEach((device) {

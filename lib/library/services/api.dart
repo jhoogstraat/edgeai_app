@@ -7,7 +7,6 @@ import 'package:socket_io_client/socket_io_client.dart';
 import '../models/ai_image.dart';
 import '../models/status.dart';
 
-import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:http/http.dart' as http;
 
 class Api {
@@ -17,7 +16,7 @@ class Api {
   final _socketSetReceiver = StreamController<FeatureSet>();
 
   Api(this.host)
-      : _socket = socket_io.io(
+      : _socket = io(
             'ws://$host:5000',
             OptionBuilder()
                 .setTransports(['websocket'])

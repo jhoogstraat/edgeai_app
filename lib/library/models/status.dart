@@ -6,7 +6,7 @@ class Status {
   final Size inputSize;
   final Map<String, String> labels;
   final Map<String, int> checkedSet;
-  final double minPercentage;
+  final double? minPercentage;
   final bool isRunning;
   final String model;
 
