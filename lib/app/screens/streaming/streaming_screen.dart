@@ -21,7 +21,7 @@ class StreamingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref.read(selectedDeviceProvider).state!.name),
+        title: Text(ref.read(selectedDeviceProvider).name),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
@@ -117,10 +117,9 @@ class StreamingScreen extends ConsumerWidget {
     viewModel.state = true;
 
     if (!status.state.isRunning) {
-      status.state =
-          await Api.start(ref.read(selectedDeviceProvider).state!.ip);
+      status.state = await Api.start(ref.read(selectedDeviceProvider).ip);
     } else {
-      status.state = await Api.stop(ref.read(selectedDeviceProvider).state!.ip);
+      status.state = await Api.stop(ref.read(selectedDeviceProvider).ip);
     }
 
     viewModel.state = false;
@@ -128,7 +127,7 @@ class StreamingScreen extends ConsumerWidget {
 
   void _configureButtonPress(BuildContext context, WidgetRef ref) {
     final status = ref.read(selectedDeviceStatusProvider.notifier);
-    final sliderValue = ValueNotifier(status.state.minPercentage);
+    final sliderValue = ValueNotifier(status.state.minPercentage ?? 0.8);
 
     showDialog(
       context: context,

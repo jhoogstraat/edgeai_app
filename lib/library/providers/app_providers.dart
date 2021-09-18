@@ -1,4 +1,3 @@
-import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../notifiers/checked_set_notifier.dart';
 import '../notifiers/devices_notifier.dart';
@@ -13,11 +12,14 @@ import '../services/api.dart';
 final deviceStatusProvider = FutureProvider.autoDispose
     .family<Status, Device>((ref, device) => Api.fetchStatus(device.ip));
 
+/// This Provider is scoped.
 /// State holder of the user-selected [Device].
 ///
-/// Set from UI by the user!
-final selectedDeviceProvider = StateProvider<Device?>(
-  (ref) => null,
+/// Set from UI
+final selectedDeviceProvider = Provider<Device>(
+  (ref) => throw UnimplementedError(
+    'Required to override all dependent providers aswell',
+  ),
 );
 
 /// This is different to [deviceStatusProvider] in that it provides the [Status]
@@ -26,7 +28,9 @@ final selectedDeviceProvider = StateProvider<Device?>(
 /// Set from UI, to allow synchronous access
 /// to the current [Device]s [Status].
 final selectedDeviceStatusProvider = StateProvider<Status>(
-    (ref) => Status(false, Size.zero, Size.zero, Size.zero, {}, {}, null, ""));
+  (ref) => throw UnimplementedError(
+      'Required to override all dependent providers aswell'),
+);
 
 /// Provides video frames coming from the edge device.
 final frameProvider = StreamProvider.autoDispose<AIImage>(

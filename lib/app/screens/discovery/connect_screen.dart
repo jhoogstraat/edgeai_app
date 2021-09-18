@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:obj_detect_board/library/providers/service_providers.dart';
 import '../../../library/providers/config_providers.dart';
 import '../streaming/streaming_screen.dart';
 import '../../../library/models/status.dart';
@@ -96,13 +97,25 @@ class ConnectScreen extends ConsumerWidget {
     Status status,
     Device device,
   ) async {
-    ref.read(selectedDeviceProvider).state = device;
-    ref.read(selectedDeviceStatusProvider).state = status;
+    // ref.read(selectedDeviceStatusProvider).state = status;
 
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const StreamingScreen(),
+        builder: (context) => ProviderScope(
+          overrides: [
+            selectedDeviceProvider
+                .overrideWithProvider(Provider((ref) => device)),
+            selectedDeviceStatusProvider
+                .overrideWithProvider(StateProvider((ref) => status)),
+            apiProvider,
+            deviceStatusProvider,
+            frameProvider,
+            checkedSetProvider,
+            featureSetsProvider,
+          ],
+          child: const StreamingScreen(),
+        ),
       ),
     );
 

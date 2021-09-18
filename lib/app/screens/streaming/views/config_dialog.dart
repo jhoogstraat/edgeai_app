@@ -8,7 +8,7 @@ import 'feature_stepper.dart';
 class ConfigDialog extends StatelessWidget {
   const ConfigDialog({Key? key, required this.sliderValue}) : super(key: key);
 
-  final ValueNotifier<double?> sliderValue;
+  final ValueNotifier<double> sliderValue;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,9 @@ class ConfigDialog extends StatelessWidget {
                       ))
                   .toList(),
               const Text('Min-Prozentsatz'),
-              ValueListenableBuilder(
+              ValueListenableBuilder<double>(
                 valueListenable: sliderValue,
-                builder: (context, dynamic value, child) => Slider(
+                builder: (context, value, child) => Slider(
                   value: value,
                   divisions: 10,
                   label: value.toString(),
@@ -61,7 +61,7 @@ class ConfigDialog extends StatelessWidget {
 
   Future<void> saveConfigButtonPress(BuildContext context, WidgetRef ref,
       Map<String, int> checkedSet, double? minPercentage) async {
-    final host = ref.read(selectedDeviceProvider).state!.ip;
+    final host = ref.read(selectedDeviceProvider).ip;
     final status = await Api.configure(host,
         checkedSet: checkedSet, minPercentage: minPercentage);
     ref.read(selectedDeviceStatusProvider).state = status;
