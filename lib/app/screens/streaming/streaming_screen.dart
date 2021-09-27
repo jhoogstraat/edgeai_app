@@ -34,41 +34,47 @@ class StreamingScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          const StreamView(),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: _bodyPadding),
-              child: Consumer(
-                builder: (context, ref, child) {
-                  final status = ref.watch(selectedDeviceStatusProvider).state;
+            child: ListView(
+              children: [
+                const StreamView(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: _bodyPadding),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final status =
+                          ref.watch(selectedDeviceStatusProvider).state;
 
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                    childAspectRatio: 3.0,
-                    children: [
-                      PropertyView(
-                        title: 'MODEL',
-                        value: status.model,
-                      ),
-                      PropertyView(
-                        title: 'AUFLÖSUNG (KAMERA)',
-                        value:
-                            '${status.frameSize.width.toInt()} x ${status.frameSize.height.toInt()}',
-                      ),
-                      PropertyView(
-                          title: 'STATUS',
-                          value: status.isRunning ? 'AKTIV' : 'INAKTIV'),
-                      PropertyView(
-                          title: 'AUFLÖSUNG (CROPPED)',
-                          value:
-                              '${status.frameSizeCropped.width.toInt()} x ${status.frameSizeCropped.height.toInt()}'),
-                    ],
-                  );
-                },
-              ),
+                      return GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 20),
+                        childAspectRatio: 2.0,
+                        children: [
+                          PropertyView(
+                            title: 'MODEL',
+                            value: status.model,
+                          ),
+                          PropertyView(
+                            title: 'AUFLÖSUNG (KAMERA)',
+                            value:
+                                '${status.frameSize.width.toInt()} x ${status.frameSize.height.toInt()}',
+                          ),
+                          PropertyView(
+                              title: 'STATUS',
+                              value: status.isRunning ? 'AKTIV' : 'INAKTIV'),
+                          PropertyView(
+                              title: 'AUFLÖSUNG (CROPPED)',
+                              value:
+                                  '${status.frameSizeCropped.width.toInt()} x ${status.frameSizeCropped.height.toInt()}'),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
