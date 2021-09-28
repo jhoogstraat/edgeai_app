@@ -65,18 +65,17 @@ class ConnectScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final sliderValue = ValueNotifier(
-      ref.read(discoveryTimeoutConfigProvider).state.toDouble(),
-    );
+    final initialValue =
+        ref.read(discoveryTimeoutConfigProvider).state.toDouble();
 
-    await showDialog(
+    final selectedValue = await showDialog<double>(
       context: context,
-      builder: (context) {
-        return ChangeTimeoutDialog(sliderValue: sliderValue);
-      },
+      builder: (context) => ChangeTimeoutDialog(initialValue: initialValue),
     );
 
-    ref.read(discoveryTimeoutConfigProvider).state = sliderValue.value.toInt();
+    if (selectedValue != null) {
+      ref.read(discoveryTimeoutConfigProvider).state = selectedValue.toInt();
+    }
   }
 
   ///

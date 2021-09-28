@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:horizontal_picker/horizontal_picker.dart';
 
-class ChangeTimeoutDialog extends StatelessWidget {
-  const ChangeTimeoutDialog({
-    Key? key,
-    required this.sliderValue,
-  }) : super(key: key);
+class ChangeTimeoutDialog extends StatefulWidget {
+  const ChangeTimeoutDialog({Key? key, required this.initialValue})
+      : super(key: key);
 
-  final ValueNotifier<double> sliderValue;
+  final double initialValue;
+
+  @override
+  State<ChangeTimeoutDialog> createState() => _ChangeTimeoutDialogState();
+}
+
+class _ChangeTimeoutDialogState extends State<ChangeTimeoutDialog> {
+  late double currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    currentValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Timeout einstellen (Sek.)'),
-      content: ValueListenableBuilder<double>(
-        valueListenable: sliderValue,
-        builder: (context, value, child) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Slider(
-              value: value,
-              min: 1.0,
-              max: 10.0,
-              divisions: 9,
-              label: value.toString(),
-              onChanged: (newValue) => sliderValue.value = newValue,
-            ),
-          ],
-        ),
-      ),
+      contentPadding: EdgeInsets.zero,
+      content: HorizontalPicker(
+          minValue: 1,
+          maxValue: 10,
+          divisions: 9,
+          initialPosition: InitialPosition.center,
+          suffix: "s",
+          backgroundColor: Colors.transparent,
+          activeItemTextColor: Theme.of(context).colorScheme.primary,
+          passiveItemsTextColor: Theme.of(context).colorScheme.onSurface,
+          showCursor: false,
+          onChanged: (value) => currentValue = value),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, currentValue),
           child: const Text('Speichern'),
         )
       ],
