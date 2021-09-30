@@ -21,12 +21,6 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^1.0.4
-  flutter_ume:  ^0.2.1
-  flutter_ume_kit_ui: ^0.2.1  # null-safety version: ^0.2.1
-  flutter_ume_kit_device: ^0.2.1  # null-safety version: ^0.2.1
-  flutter_ume_kit_perf: ^0.2.1  # null-safety version: ^0.2.1
-  flutter_ume_kit_show_code: ^0.2.1  # null-safety version: ^0.2.1
-  flutter_ume_kit_console: ^0.2.1  # null-safety version: ^0.2.1
   
   flutter_test:
     sdk: flutter

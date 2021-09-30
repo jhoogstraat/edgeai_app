@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../notifiers/checked_set_notifier.dart';
 import '../notifiers/devices_notifier.dart';
@@ -16,10 +18,11 @@ final deviceStatusProvider = FutureProvider.autoDispose
 /// State holder of the user-selected [Device].
 ///
 /// Set from UI
-final selectedDeviceProvider = Provider<Device>(
-  (ref) => throw UnimplementedError(
-    'Required to override all dependent providers aswell',
-  ),
+///
+/// Workaround for now
+/// https://github.com/rrousselGit/river_pod/issues/767
+final selectedDeviceProvider = StateProvider<Device>(
+  (ref) => Device("", ""),
 );
 
 /// This is different to [deviceStatusProvider] in that it provides the [Status]
@@ -27,9 +30,11 @@ final selectedDeviceProvider = Provider<Device>(
 ///
 /// Set from UI, to allow synchronous access
 /// to the current [Device]s [Status].
+///
+/// Workaround for now.
+/// https://github.com/rrousselGit/river_pod/issues/767
 final selectedDeviceStatusProvider = StateProvider<Status>(
-  (ref) => throw UnimplementedError(
-      'Required to override all dependent providers aswell'),
+  (ref) => Status(false, Size.zero, Size.zero, Size.zero, {}, {}, 0.0, ""),
 );
 
 /// Provides video frames coming from the edge device.

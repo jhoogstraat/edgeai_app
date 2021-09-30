@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../library/providers/app_providers.dart';
 import '../../../library/services/api.dart';
-import '../history/sets_screen.dart';
+import '../history/history_screen.dart';
 import 'views/config_dialog.dart';
 import 'views/property_view.dart';
 import 'views/stream_view.dart';
@@ -21,7 +21,7 @@ class StreamingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref.read(selectedDeviceProvider).name),
+        title: Text(ref.read(selectedDeviceProvider).state.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
@@ -123,9 +123,9 @@ class StreamingScreen extends ConsumerWidget {
     viewModel.state = true;
 
     if (!status.state.isRunning) {
-      status.state = await Api.start(ref.read(selectedDeviceProvider).ip);
+      status.state = await Api.start(ref.read(selectedDeviceProvider).state.ip);
     } else {
-      status.state = await Api.stop(ref.read(selectedDeviceProvider).ip);
+      status.state = await Api.stop(ref.read(selectedDeviceProvider).state.ip);
     }
 
     viewModel.state = false;

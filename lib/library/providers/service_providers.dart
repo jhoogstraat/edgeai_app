@@ -8,7 +8,7 @@ final mdnsProvider = Provider((ref) => MDNSService());
 
 /// Provides an api to the currently selected edge device.
 final apiProvider = Provider.autoDispose((ref) {
-  final device = ref.watch(selectedDeviceProvider);
+  final device = ref.watch(selectedDeviceProvider).state;
   final api = Api(device.ip);
   ref.onDispose(() => api.dispose());
   return api;
