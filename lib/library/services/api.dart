@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:edgeai_app/library/models/motor_status.dart';
+import '../models/motor_status.dart';
 
 import '../models/feature_set.dart';
 import 'package:socket_io_client/socket_io_client.dart';

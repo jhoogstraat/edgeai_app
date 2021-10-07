@@ -1,5 +1,5 @@
-import 'package:edgeai_app/library/providers/app_providers.dart';
-import 'package:edgeai_app/library/providers/service_providers.dart';
+import '../../../../library/providers/app_providers.dart';
+import '../../../../library/providers/service_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
