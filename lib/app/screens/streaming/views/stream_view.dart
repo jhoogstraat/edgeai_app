@@ -38,7 +38,7 @@ class StreamView extends ConsumerWidget {
                       ),
                     )
                   : Center(child: _buildInactiveText(context)),
-              loading: () => Center(
+              loading: (previous) => Center(
                 child: status.isRunning
                     ? const SizedBox(
                         width: 70,
@@ -49,7 +49,7 @@ class StreamView extends ConsumerWidget {
                       )
                     : _buildInactiveText(context),
               ),
-              error: (error, _) => throw error,
+              error: (error, _, __) => throw error,
             ),
       ),
     );

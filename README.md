@@ -1,4 +1,4 @@
-# obj_detect_board
+# edgeai_app
 
 A new Flutter project.
 

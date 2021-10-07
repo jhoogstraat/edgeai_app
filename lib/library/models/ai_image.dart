@@ -6,7 +6,7 @@ class AIImage {
   final Image frame;
   final List<Feature> features;
 
-  AIImage(this.frame, this.features);
+  const AIImage(this.frame, this.features);
 
   static Future<AIImage> fromMessage(Map<String, dynamic> json) async {
     final codec = await instantiateImageCodec(json['frame']);

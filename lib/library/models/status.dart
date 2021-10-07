@@ -1,6 +1,6 @@
 import 'package:flutter/painting.dart';
 
-class Status {
+class SystemStatus {
   final Size frameSize;
   final Size frameSizeCropped;
   final Size inputSize;
@@ -10,10 +10,18 @@ class Status {
   final bool isRunning;
   final String model;
 
-  Status(this.isRunning, this.frameSize, this.frameSizeCropped, this.inputSize,
-      this.labels, this.checkedSet, this.minPercentage, this.model);
+  const SystemStatus(
+    this.isRunning,
+    this.frameSize,
+    this.frameSizeCropped,
+    this.inputSize,
+    this.labels,
+    this.checkedSet,
+    this.minPercentage,
+    this.model,
+  );
 
-  factory Status.fromJson(Map<String, dynamic> json) {
+  factory SystemStatus.fromJson(Map<String, dynamic> json) {
     final isRunning = json['isRunning'];
     final frameSizeOriginal = sizeFrom(json['frameSize']['original']);
     final frameSizeCropped = sizeFrom(json['frameSize']['crop']);
@@ -23,8 +31,8 @@ class Status {
     final minPercentage = json['usecase']['minPercentage'];
     final model = json['model'].replaceFirst('models/', '');
 
-    return Status(isRunning, frameSizeOriginal, frameSizeCropped, inputSize,
-        labels, checkedSet, minPercentage, model);
+    return SystemStatus(isRunning, frameSizeOriginal, frameSizeCropped,
+        inputSize, labels, checkedSet, minPercentage, model);
   }
 
   static Size sizeFrom(dynamic json) {

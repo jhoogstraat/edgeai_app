@@ -15,12 +15,12 @@ class StatusIndicator extends ConsumerWidget {
           data: (status) => status.isRunning
               ? const Icon(Icons.circle, color: Colors.green, size: _iconSize)
               : const Icon(Icons.circle, color: Colors.red, size: _iconSize),
-          loading: () => const SizedBox(
+          loading: (previous) => const SizedBox(
             width: _iconSize,
             height: _iconSize,
             child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
           ),
-          error: (error, stack) => const Icon(Icons.error, size: _iconSize),
+          error: (error, stack, _) => const Icon(Icons.error, size: _iconSize),
         );
   }
 }

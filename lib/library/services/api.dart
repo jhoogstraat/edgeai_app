@@ -24,9 +24,9 @@ class Api {
                 .enableForceNewConnection()
                 .build());
 
-  Future<Status> startService() async {
+  Future<SystemStatus> startService() async {
     final response = await http.get(Uri.http('$host:5000', 'start'));
-    final status = Status.fromJson(jsonDecode(response.body));
+    final status = SystemStatus.fromJson(jsonDecode(response.body));
     return status;
   }
 
@@ -48,27 +48,28 @@ class Api {
     return _socketSetReceiver.stream;
   }
 
-  static Future<Status> _fetchStatus(String host, String path) async {
+  static Future<SystemStatus> _fetchStatus(String host, String path) async {
     final response = await http.get(Uri.http('$host:5000', path));
-    return Status.fromJson(jsonDecode(response.body));
+    return SystemStatus.fromJson(jsonDecode(response.body));
   }
 
-  static Future<Status> _updateStatus(String host, String path,
+  static Future<SystemStatus> _updateStatus(String host, String path,
       [String? json]) async {
     final response = await http.post(Uri.http('$host:5000', path),
         body: json,
         headers: json == null
             ? null
             : {HttpHeaders.contentTypeHeader: 'application/json'});
-    return Status.fromJson(jsonDecode(response.body));
+    return SystemStatus.fromJson(jsonDecode(response.body));
   }
 
-  static Future<Status> start(String host) => _updateStatus(host, 'start');
-  static Future<Status> stop(String host) => _updateStatus(host, 'stop');
-  static Future<Status> fetchStatus(String host) =>
+  static Future<SystemStatus> start(String host) =>
+      _updateStatus(host, 'start');
+  static Future<SystemStatus> stop(String host) => _updateStatus(host, 'stop');
+  static Future<SystemStatus> fetchStatus(String host) =>
       _fetchStatus(host, 'status');
 
-  static Future<Status> configure(String host,
+  static Future<SystemStatus> configure(String host,
       {required Map<String, int> checkedSet, required double? minPercentage}) {
     final json = jsonEncode({
       'set': checkedSet..removeWhere((key, value) => value == 0),

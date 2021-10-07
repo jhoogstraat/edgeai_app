@@ -12,4 +12,4 @@ final apiProvider = Provider.autoDispose((ref) {
   final api = Api(device.ip);
   ref.onDispose(() => api.dispose());
   return api;
-});
+}, dependencies: [selectedDeviceProvider]);

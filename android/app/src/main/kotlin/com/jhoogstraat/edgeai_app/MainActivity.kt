@@ -1,4 +1,4 @@
-package com.jhoogstraat.obj_detect_board
+package com.jhoogstraat.edgeai_app
 
 import io.flutter.embedding.android.FlutterActivity
 

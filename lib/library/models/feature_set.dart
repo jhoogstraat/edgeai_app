@@ -9,8 +9,14 @@ class FeatureSet {
   // final Image referenceFrame;
   final DateTime timestamp;
 
-  FeatureSet(this.id, this.requestedFeatures, this.detectedFeatures,
-      this.isComplete, this.referenceFrame, this.timestamp);
+  const FeatureSet(
+    this.id,
+    this.requestedFeatures,
+    this.detectedFeatures,
+    this.isComplete,
+    this.referenceFrame,
+    this.timestamp,
+  );
 
   static Future<FeatureSet> fromMessage(Map<String, dynamic> json) async {
     final codec = await instantiateImageCodec(json['referenceFrame']);

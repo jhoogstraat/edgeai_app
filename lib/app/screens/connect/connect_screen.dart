@@ -81,8 +81,8 @@ class ConnectScreen extends ConsumerWidget {
   void _deviceTilePress(BuildContext context, WidgetRef ref, Device device) {
     ref.read(deviceStatusProvider(device)).when(
           data: (status) => showStream(context, ref, status, device),
-          loading: () {},
-          error: (error, stack) {
+          loading: (previous) {},
+          error: (error, stack, _) {
             showError(context, error as Exception, stack);
           },
         );
@@ -92,7 +92,7 @@ class ConnectScreen extends ConsumerWidget {
   Future<void> showStream(
     BuildContext context,
     WidgetRef ref,
-    Status status,
+    SystemStatus status,
     Device device,
   ) async {
     ref.read(selectedDeviceProvider).state = device;

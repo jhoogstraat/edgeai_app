@@ -12,7 +12,7 @@ import '../services/api.dart';
 
 /// Fetches the status of a given [Device].
 final deviceStatusProvider = FutureProvider.autoDispose
-    .family<Status, Device>((ref, device) => Api.fetchStatus(device.ip));
+    .family<SystemStatus, Device>((ref, device) => Api.fetchStatus(device.ip));
 
 /// This Provider is scoped.
 /// State holder of the user-selected [Device].
@@ -22,24 +22,27 @@ final deviceStatusProvider = FutureProvider.autoDispose
 /// Workaround for now
 /// https://github.com/rrousselGit/river_pod/issues/767
 final selectedDeviceProvider = StateProvider<Device>(
-  (ref) => Device("", ""),
+  (ref) => const Device("", ""),
 );
 
-/// This is different to [deviceStatusProvider] in that it provides the [Status]
+/// This is different to [deviceStatusProvider] in that it provides the [SystemStatus]
 /// of the currently selected device.
 ///
 /// Set from UI, to allow synchronous access
-/// to the current [Device]s [Status].
+/// to the current [Device]s [SystemStatus].
 ///
 /// Workaround for now.
 /// https://github.com/rrousselGit/river_pod/issues/767
-final selectedDeviceStatusProvider = StateProvider<Status>(
-  (ref) => Status(false, Size.zero, Size.zero, Size.zero, {}, {}, 0.0, ""),
+final selectedDeviceStatusProvider = StateProvider<SystemStatus>(
+  (ref) => const SystemStatus(
+      false, Size.zero, Size.zero, Size.zero, {}, {}, 0.0, ""),
 );
 
 /// Provides video frames coming from the edge device.
 final frameProvider = StreamProvider.autoDispose<AIImage>(
-    (ref) => ref.watch(apiProvider).listenFrames());
+  (ref) => ref.watch(apiProvider).listenFrames(),
+  dependencies: [apiProvider],
+);
 
 ///
 final checkedSetProvider = Provider.autoDispose<CheckedSetNotifier>(
@@ -56,4 +59,5 @@ final devicesProvider = ChangeNotifierProvider(
 final featureSetsProvider =
     ChangeNotifierProvider.autoDispose<FeatureSetsNotifier>(
   (ref) => FeatureSetsNotifier(ref.watch(apiProvider).listenFeatureSets()),
+  dependencies: [apiProvider],
 );

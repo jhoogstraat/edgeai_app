@@ -1,5 +1,6 @@
 class Device {
   final String name;
   final String ip;
-  Device(this.name, this.ip);
+
+  const Device(this.name, this.ip);
 }

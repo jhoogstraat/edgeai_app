@@ -1,10 +1,10 @@
-name: obj_detect_board
+name: edgeai_app
 description: The companion app for our paper.
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -20,10 +20,9 @@ dependencies:
   network_info_plus: ^1.1.0
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
-  
   flutter_test:
     sdk: flutter
-  
+  flutter_lints: ^1.0.4
+
 flutter:
   uses-material-design: true
