@@ -5,15 +5,15 @@ import '../../../../library/services/api.dart';
 
 import 'feature_stepper.dart';
 
-class ConfigDialog extends StatelessWidget {
-  const ConfigDialog({Key? key, required this.sliderValue}) : super(key: key);
+class SetDialog extends StatelessWidget {
+  const SetDialog({Key? key, required this.sliderValue}) : super(key: key);
 
   final ValueNotifier<double> sliderValue;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Konfigurieren'),
+      title: const Text('Setkonfiguration'),
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 10, 24),
       content: Consumer(
         builder: (context, ref, child) {

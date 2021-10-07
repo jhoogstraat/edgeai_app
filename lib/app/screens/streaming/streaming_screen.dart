@@ -1,10 +1,12 @@
+import 'package:edgeai_app/app/screens/streaming/views/motor_dialog.dart';
+import 'package:edgeai_app/library/providers/service_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../library/providers/app_providers.dart';
 import '../../../library/services/api.dart';
 import '../history/history_screen.dart';
-import 'views/config_dialog.dart';
+import 'views/set_dialog.dart';
 import 'views/property_view.dart';
 import 'views/stream_view.dart';
 
@@ -89,13 +91,28 @@ class StreamingScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: viewModel.state
-                              ? null
-                              : () => _configureButtonPress(context, ref),
-                          child: const Text('Konfigurieren')),
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ElevatedButton(
+                              onPressed: viewModel.state
+                                  ? null
+                                  : () => _configureButtonPress(context, ref),
+                              child: const Text('Set')),
+                        ),
+                        const SizedBox(width: _bodyPadding),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: ElevatedButton(
+                              onPressed: viewModel.state
+                                  ? null
+                                  : () => _configureMotorPress(context, ref),
+                              child: const Text('Motor')),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       width: double.infinity,
@@ -138,7 +155,20 @@ class StreamingScreen extends ConsumerWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => ConfigDialog(sliderValue: sliderValue),
+      builder: (context) => SetDialog(sliderValue: sliderValue),
+    );
+  }
+
+  Future<void> _configureMotorPress(BuildContext context, WidgetRef ref) async {
+    final api = ref.read(apiProvider);
+    final motorStatus = await api.motorStatus();
+
+    ref.read(motorStatusProvider).state = motorStatus;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const MotorDialog(),
     );
   }
 }

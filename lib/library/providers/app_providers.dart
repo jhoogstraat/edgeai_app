@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:edgeai_app/library/models/motor_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../notifiers/checked_set_notifier.dart';
 import '../notifiers/devices_notifier.dart';
@@ -60,4 +62,8 @@ final featureSetsProvider =
     ChangeNotifierProvider.autoDispose<FeatureSetsNotifier>(
   (ref) => FeatureSetsNotifier(ref.watch(apiProvider).listenFeatureSets()),
   dependencies: [apiProvider],
+);
+
+final motorStatusProvider = StateProvider<MotorStatus>(
+  (ref) => const MotorStatus(0, 0, false),
 );

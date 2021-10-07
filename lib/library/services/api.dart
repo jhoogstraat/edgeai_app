@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:edgeai_app/library/models/motor_status.dart';
+
 import '../models/feature_set.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../models/ai_image.dart';
@@ -48,6 +50,38 @@ class Api {
     return _socketSetReceiver.stream;
   }
 
+  Future<MotorStatus> startMotor() async {
+    final response = await http.post(Uri.http('$host:5000', "motor/start"));
+    return MotorStatus.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MotorStatus> stopMotor() async {
+    final response = await http.post(Uri.http('$host:5000', "motor/stop"));
+    return MotorStatus.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MotorStatus> accelerateMotor() async {
+    final response =
+        await http.post(Uri.http('$host:5000', "motor/accelerate"));
+    return MotorStatus.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MotorStatus> decelerateMotor() async {
+    final response =
+        await http.post(Uri.http('$host:5000', "motor/decelerate"));
+    return MotorStatus.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MotorStatus> reverseMotor() async {
+    final response = await http.post(Uri.http('$host:5000', "motor/reverse"));
+    return MotorStatus.fromJson(jsonDecode(response.body));
+  }
+
+  Future<MotorStatus> motorStatus() async {
+    final response = await http.get(Uri.http('$host:5000', "motor/status"));
+    return MotorStatus.fromJson(jsonDecode(response.body));
+  }
+
   static Future<SystemStatus> _fetchStatus(String host, String path) async {
     final response = await http.get(Uri.http('$host:5000', path));
     return SystemStatus.fromJson(jsonDecode(response.body));
@@ -65,7 +99,9 @@ class Api {
 
   static Future<SystemStatus> start(String host) =>
       _updateStatus(host, 'start');
+
   static Future<SystemStatus> stop(String host) => _updateStatus(host, 'stop');
+
   static Future<SystemStatus> fetchStatus(String host) =>
       _fetchStatus(host, 'status');
 
