@@ -100,7 +100,8 @@ class StreamingScreen extends ConsumerWidget {
                           child: ElevatedButton(
                               onPressed: viewModel.state
                                   ? null
-                                  : () => _configureButtonPress(context, ref),
+                                  : () =>
+                                      _configureSetButtonPress(context, ref),
                               child: const Text('Set')),
                         ),
                         const SizedBox(width: _bodyPadding),
@@ -148,7 +149,7 @@ class StreamingScreen extends ConsumerWidget {
     viewModel.state = false;
   }
 
-  void _configureButtonPress(BuildContext context, WidgetRef ref) {
+  void _configureSetButtonPress(BuildContext context, WidgetRef ref) {
     final status = ref.read(selectedDeviceStatusProvider.notifier);
     final sliderValue = ValueNotifier(status.state.minPercentage ?? 0.8);
 
@@ -162,12 +163,11 @@ class StreamingScreen extends ConsumerWidget {
   Future<void> _configureMotorPress(BuildContext context, WidgetRef ref) async {
     final api = ref.read(apiProvider);
     final motorStatus = await api.motorStatus();
-
     ref.read(motorStatusProvider).state = motorStatus;
 
-    showDialog(
+    return showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (context) => const MotorDialog(),
     );
   }

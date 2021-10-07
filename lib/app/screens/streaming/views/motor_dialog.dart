@@ -11,17 +11,18 @@ class MotorDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('Motorkonfiguration'),
       contentPadding: const EdgeInsets.all(24),
+      scrollable: true,
       content: Consumer(
         builder: (context, ref, child) {
           final api = ref.read(apiProvider);
           final status = ref.watch(motorStatusProvider);
 
-          return ListView(
-            shrinkWrap: true,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Text("Aktiv: ${status.state.running}"),
               Text(
-                  "Step-Pause: ${status.state.pause.toStringAsFixed(4)} | Richtung: ${status.state.direction}"),
+                  "Step: ${status.state.pause.toStringAsFixed(4)}s | Richtung: ${status.state.direction}"),
               ElevatedButton(
                 child: Text(status.state.running ? "Stop" : "Start"),
                 onPressed: () async {
