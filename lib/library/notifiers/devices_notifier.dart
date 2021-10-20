@@ -7,9 +7,10 @@ import '../models/device.dart';
 
 class DevicesNotifier extends ChangeNotifier {
   // State
-  bool _isInitialized = false;
-  bool get isInitialized => _isInitialized;
+  bool _isSearching = false;
+  bool get isSearching => _isSearching;
 
+  Object? error;
   List<Device> _mdnsDevices = [];
   final List<Device> _manualDevices = [];
   List<Device> get devices => [..._mdnsDevices, ..._manualDevices];
@@ -22,9 +23,25 @@ class DevicesNotifier extends ChangeNotifier {
 
   Future<void> refresh() async {
     final timeout = _read(discoveryTimeoutConfigProvider).state;
-    _mdnsDevices =
-        await _read(mdnsProvider).discoverDevices(Duration(seconds: timeout));
-    _isInitialized = true;
+
+    if (_isSearching == true) {
+      return;
+    }
+
+    error = null;
+    _isSearching = true;
+
+    // Interferes with RefreshIndicator
+    // notifyListeners();
+
+    try {
+      _mdnsDevices =
+          await _read(mdnsProvider).discoverDevices(Duration(seconds: timeout));
+    } catch (err, stack) {
+      error = err;
+    }
+
+    _isSearching = false;
     notifyListeners();
   }
 

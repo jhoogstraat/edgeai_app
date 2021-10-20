@@ -1,3 +1,4 @@
+import '../../../library/notifiers/devices_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../library/providers/config_providers.dart';
@@ -16,11 +17,24 @@ class ConnectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<DevicesNotifier>(devicesProvider, (r) {
+      if (r.error != null) {
+        showDialog(
+          context: context,
+          builder: (c) => AlertDialog(
+            title: const Text("Fehler"),
+            content: Text(r.error!.toString()),
+            scrollable: true,
+          ),
+        );
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Consumer(builder: (context, ref, child) {
           final devices = ref.watch(devicesProvider);
-          return devices.isInitialized
+          return !devices.isSearching
               ? Text('${devices.devices.length} Gerät(e) gefunden')
               : const Text('Suche nach Geräten...');
         }),
@@ -40,7 +54,7 @@ class ConnectScreen extends ConsumerWidget {
       ),
       body: Consumer(builder: (context, ref, child) {
         final state = ref.watch(devicesProvider);
-        return !state.isInitialized
+        return state.isSearching
             ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
             : RefreshIndicator(
                 onRefresh: ref.read(devicesProvider).refresh,
