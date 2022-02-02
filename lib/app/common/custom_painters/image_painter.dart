@@ -1,5 +1,6 @@
-import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
+
+import 'package:flutter/rendering.dart';
 
 /// Paints a [ui.Image]
 class ImagePainter extends CustomPainter {

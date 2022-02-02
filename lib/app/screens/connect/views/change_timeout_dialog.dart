@@ -26,6 +26,7 @@ class _ChangeTimeoutDialogState extends State<ChangeTimeoutDialog> {
       title: const Text('Timeout einstellen (Sek.)'),
       contentPadding: EdgeInsets.zero,
       content: HorizontalPicker(
+          height: 100,
           minValue: 1,
           maxValue: 10,
           divisions: 9,

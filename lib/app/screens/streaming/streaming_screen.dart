@@ -23,7 +23,7 @@ class StreamingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref.read(selectedDeviceProvider).state.name),
+        title: Text(ref.read(selectedDeviceProvider).name),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
@@ -44,8 +44,7 @@ class StreamingScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: _bodyPadding),
                   child: Consumer(
                     builder: (context, ref, child) {
-                      final status =
-                          ref.watch(selectedDeviceStatusProvider).state;
+                      final status = ref.watch(selectedDeviceStatusProvider);
 
                       return GridView.count(
                         shrinkWrap: true,
@@ -98,7 +97,7 @@ class StreamingScreen extends ConsumerWidget {
                         Flexible(
                           fit: FlexFit.tight,
                           child: ElevatedButton(
-                              onPressed: viewModel.state
+                              onPressed: viewModel
                                   ? null
                                   : () =>
                                       _configureSetButtonPress(context, ref),
@@ -108,7 +107,7 @@ class StreamingScreen extends ConsumerWidget {
                         Flexible(
                           fit: FlexFit.tight,
                           child: ElevatedButton(
-                              onPressed: viewModel.state
+                              onPressed: viewModel
                                   ? null
                                   : () => _configureMotorPress(context, ref),
                               child: const Text('Motor')),
@@ -118,11 +117,11 @@ class StreamingScreen extends ConsumerWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: viewModel.state
+                          onPressed: viewModel
                               ? null
                               : () => _toggleRunningButtonPress(ref),
-                          child: Text(
-                              status.state.isRunning ? 'Stoppen' : 'Starten')),
+                          child:
+                              Text(status.isRunning ? 'Stoppen' : 'Starten')),
                     ),
                   ],
                 );
@@ -135,15 +134,15 @@ class StreamingScreen extends ConsumerWidget {
   }
 
   Future<void> _toggleRunningButtonPress(WidgetRef ref) async {
-    final viewModel = ref.read(_viewModelProvider);
-    final status = ref.read(selectedDeviceStatusProvider);
+    final viewModel = ref.read(_viewModelProvider.notifier);
+    final status = ref.read(selectedDeviceStatusProvider.notifier);
 
     viewModel.state = true;
 
     if (!status.state.isRunning) {
-      status.state = await Api.start(ref.read(selectedDeviceProvider).state.ip);
+      status.state = await Api.start(ref.read(selectedDeviceProvider).ip);
     } else {
-      status.state = await Api.stop(ref.read(selectedDeviceProvider).state.ip);
+      status.state = await Api.stop(ref.read(selectedDeviceProvider).ip);
     }
 
     viewModel.state = false;
@@ -163,7 +162,7 @@ class StreamingScreen extends ConsumerWidget {
   Future<void> _configureMotorPress(BuildContext context, WidgetRef ref) async {
     final api = ref.read(apiProvider);
     final motorStatus = await api.motorStatus();
-    ref.read(motorStatusProvider).state = motorStatus;
+    ref.read(motorStatusProvider.notifier).state = motorStatus;
 
     return showDialog(
       context: context,

@@ -6,52 +6,52 @@ import '../providers/service_providers.dart';
 import '../models/device.dart';
 
 class DevicesNotifier extends ChangeNotifier {
-  // State
-  bool _isSearching = false;
+  // Public Notifier state
   bool get isSearching => _isSearching;
-
   Object? error;
-  List<Device> _mdnsDevices = [];
-  final List<Device> _manualDevices = [];
-  List<Device> get devices => [..._mdnsDevices, ..._manualDevices];
+  List<Device> get devices => [..._mdnsFoundDevices, ..._manuallyAddedDevices];
 
-  final Reader _read;
+  // Private state
+  bool _isSearching = false;
+  List<Device> _mdnsFoundDevices = [];
+  final List<Device> _manuallyAddedDevices = [];
+  final Reader _readProvider;
 
-  DevicesNotifier(this._read) {
+  DevicesNotifier(this._readProvider) {
     refresh();
   }
 
   Future<void> refresh() async {
-    final timeout = _read(discoveryTimeoutConfigProvider).state;
-
     if (_isSearching == true) {
       return;
     }
 
-    error = null;
     _isSearching = true;
+    error = null;
 
-    // Interferes with RefreshIndicator
-    // notifyListeners();
+    // Interferes with RefreshIndicator.. What does this?
+    notifyListeners();
 
+    final searchTimeout = _readProvider(discoveryTimeoutConfigProvider);
     try {
-      _mdnsDevices =
-          await _read(mdnsProvider).discoverDevices(Duration(seconds: timeout));
-    } catch (err, stack) {
+      _mdnsFoundDevices = await _readProvider(mdnsProvider)
+          .discoverDevices(Duration(seconds: searchTimeout));
+    } catch (err, _) {
       error = err;
     }
 
     _isSearching = false;
+
     notifyListeners();
   }
 
   void addDevice(String ip) {
-    _manualDevices.add(Device(ip, ip));
+    _manuallyAddedDevices.add(Device(ip, ip));
     notifyListeners();
   }
 
   void removeDevice(int index) {
-    _manualDevices.removeAt(index);
+    _manuallyAddedDevices.removeAt(index);
     notifyListeners();
   }
 }

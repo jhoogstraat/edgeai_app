@@ -15,7 +15,7 @@ class MotorDialog extends StatelessWidget {
       content: Consumer(
         builder: (context, ref, child) {
           final api = ref.read(apiProvider);
-          final status = ref.watch(motorStatusProvider);
+          final status = ref.watch(motorStatusProvider.notifier);
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

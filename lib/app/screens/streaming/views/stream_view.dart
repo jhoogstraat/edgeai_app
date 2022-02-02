@@ -11,7 +11,7 @@ class StreamView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     bool? _setCompleteIndicator;
 
-    ref.listen(featureSetsProvider, (FeatureSetsNotifier featureSets) {
+    ref.listen(featureSetsProvider, (_, FeatureSetsNotifier featureSets) {
       _setCompleteIndicator = featureSets.last.isComplete;
       Future.delayed(
         const Duration(seconds: 1),
@@ -19,7 +19,7 @@ class StreamView extends ConsumerWidget {
       );
     });
 
-    final status = ref.read(selectedDeviceStatusProvider).state;
+    final status = ref.read(selectedDeviceStatusProvider);
     return FittedBox(
       alignment: Alignment.center,
       child: SizedBox(
@@ -38,7 +38,7 @@ class StreamView extends ConsumerWidget {
                       ),
                     )
                   : Center(child: _buildInactiveText(context)),
-              loading: (previous) => Center(
+              loading: () => Center(
                 child: status.isRunning
                     ? const SizedBox(
                         width: 70,
@@ -49,7 +49,7 @@ class StreamView extends ConsumerWidget {
                       )
                     : _buildInactiveText(context),
               ),
-              error: (error, _, __) => throw error,
+              error: (error, _) => throw error,
             ),
       ),
     );

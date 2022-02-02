@@ -1,15 +1,16 @@
 import 'dart:ui';
 
-import '../models/motor_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/ai_image.dart';
+import '../models/device.dart';
+import '../models/motor_status.dart';
+import '../models/status.dart';
 import '../notifiers/checked_set_notifier.dart';
 import '../notifiers/devices_notifier.dart';
 import '../notifiers/feature_set_notifier.dart';
-import '../models/ai_image.dart';
-import '../models/device.dart';
-import '../models/status.dart';
-import 'service_providers.dart';
 import '../services/api.dart';
+import 'service_providers.dart';
 
 /// Fetches the status of a given [Device].
 final deviceStatusProvider = FutureProvider.autoDispose
@@ -48,7 +49,7 @@ final frameProvider = StreamProvider.autoDispose<AIImage>(
 ///
 final checkedSetProvider = Provider.autoDispose<CheckedSetNotifier>(
   (ref) {
-    final status = ref.read(selectedDeviceStatusProvider).state;
+    final status = ref.read(selectedDeviceStatusProvider);
     return CheckedSetNotifier(status.labels.keys, status.checkedSet);
   },
 );

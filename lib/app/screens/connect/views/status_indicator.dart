@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../library/providers/app_providers.dart';
+
 import '../../../../library/models/device.dart';
+import '../../../../library/providers/app_providers.dart';
 
 class StatusIndicator extends ConsumerWidget {
   final Device device;
@@ -15,12 +16,12 @@ class StatusIndicator extends ConsumerWidget {
           data: (status) => status.isRunning
               ? const Icon(Icons.circle, color: Colors.green, size: _iconSize)
               : const Icon(Icons.circle, color: Colors.red, size: _iconSize),
-          loading: (previous) => const SizedBox(
+          loading: () => const SizedBox(
             width: _iconSize,
             height: _iconSize,
             child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
           ),
-          error: (error, stack, _) => const Icon(Icons.error, size: _iconSize),
+          error: (error, stack) => const Icon(Icons.error, size: _iconSize),
         );
   }
 }

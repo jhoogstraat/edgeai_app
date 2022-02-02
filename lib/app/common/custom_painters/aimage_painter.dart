@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import '../../../library/models/ai_image.dart';
 
 class AIImagePainter extends CustomPainter {

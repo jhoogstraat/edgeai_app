@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../library/providers/app_providers.dart';
 import '../../../../library/services/api.dart';
-
 import 'feature_stepper.dart';
 
 class SetDialog extends StatelessWidget {
@@ -19,7 +19,7 @@ class SetDialog extends StatelessWidget {
         builder: (context, ref, child) {
           // Makes sure the checkedSetProvider is disposed properly when the dialog is dismissed.
           final state = ref.watch(checkedSetProvider);
-          final status = ref.read(selectedDeviceStatusProvider).state;
+          final status = ref.read(selectedDeviceStatusProvider.notifier).state;
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -61,10 +61,10 @@ class SetDialog extends StatelessWidget {
 
   Future<void> saveConfigButtonPress(BuildContext context, WidgetRef ref,
       Map<String, int> checkedSet, double? minPercentage) async {
-    final host = ref.read(selectedDeviceProvider).state.ip;
+    final host = ref.read(selectedDeviceProvider).ip;
     final status = await Api.configure(host,
         checkedSet: checkedSet, minPercentage: minPercentage);
-    ref.read(selectedDeviceStatusProvider).state = status;
+    ref.read(selectedDeviceStatusProvider.notifier).state = status;
     Navigator.pop(context);
   }
 }

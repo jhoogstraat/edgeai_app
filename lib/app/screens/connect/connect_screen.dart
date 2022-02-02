@@ -1,15 +1,15 @@
-import '../../../library/notifiers/devices_notifier.dart';
+import 'package:edgeai_app/app/screens/connect/connect_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../library/models/device.dart';
+import '../../../library/models/status.dart';
+import '../../../library/notifiers/devices_notifier.dart';
+import '../../../library/providers/app_providers.dart';
 import '../../../library/providers/config_providers.dart';
 import '../streaming/streaming_screen.dart';
-import '../../../library/models/status.dart';
-
-import '../../../library/providers/app_providers.dart';
-import 'views/change_timeout_dialog.dart';
-import '../../../library/models/device.dart';
-
 import 'views/add_device_dialog.dart';
+import 'views/change_timeout_dialog.dart';
 import 'views/status_indicator.dart';
 
 class ConnectScreen extends ConsumerWidget {
@@ -17,28 +17,23 @@ class ConnectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<DevicesNotifier>(devicesProvider, (r) {
-      if (r.error != null) {
-        showDialog(
-          context: context,
-          builder: (c) => AlertDialog(
-            title: const Text("Fehler"),
-            content: Text(r.error!.toString()),
-            scrollable: true,
-          ),
-        );
+    // Show Dialog on error
+    ref.listen<Object?>(viewModelProvider.select((value) => value.error),
+        (_, error) {
+      if (error != null) {
+        showErrorDialog(context, Exception(error), null);
       }
     });
 
+    final viewModel = ref.watch(viewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: Consumer(builder: (context, ref, child) {
-          final devices = ref.watch(devicesProvider);
-          return !devices.isSearching
-              ? Text('${devices.devices.length} Gerät(e) gefunden')
-              : const Text('Suche nach Geräten...');
-        }),
+        title: Text(viewModel.title),
         actions: [
+          IconButton(
+              onPressed: ref.read(devicesProvider).refresh,
+              icon: const Icon(Icons.refresh)),
           IconButton(
               icon: const Icon(Icons.timelapse),
               onPressed: () => _timeoutConfigButtonPress(context, ref)),
@@ -52,24 +47,26 @@ class ConnectScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Consumer(builder: (context, ref, child) {
-        final state = ref.watch(devicesProvider);
-        return state.isSearching
+      body: RefreshIndicator(
+        onRefresh: ref.read(devicesProvider).refresh,
+        child: viewModel.isSearching
             ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
-            : RefreshIndicator(
-                onRefresh: ref.read(devicesProvider).refresh,
-                child: ListView.separated(
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(state.devices[index].name),
-                    onTap: () =>
-                        _deviceTilePress(context, ref, state.devices[index]),
-                    trailing: StatusIndicator(device: state.devices[index]),
+            : ListView.separated(
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(viewModel.devices[index].name),
+                  onTap: () => _deviceTilePress(
+                    context,
+                    ref,
+                    viewModel.devices[index],
                   ),
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemCount: state.devices.length,
+                  trailing: StatusIndicator(
+                    device: viewModel.devices[index],
+                  ),
                 ),
-              );
-      }),
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemCount: viewModel.devices.length,
+              ),
+      ),
     );
   }
 
@@ -78,8 +75,7 @@ class ConnectScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final initialValue =
-        ref.read(discoveryTimeoutConfigProvider).state.toDouble();
+    final initialValue = ref.read(discoveryTimeoutConfigProvider).toDouble();
 
     final selectedValue = await showDialog<double>(
       context: context,
@@ -87,30 +83,31 @@ class ConnectScreen extends ConsumerWidget {
     );
 
     if (selectedValue != null) {
-      ref.read(discoveryTimeoutConfigProvider).state = selectedValue.toInt();
+      ref.read(discoveryTimeoutConfigProvider.notifier).state =
+          selectedValue.toInt();
     }
   }
 
   ///
   void _deviceTilePress(BuildContext context, WidgetRef ref, Device device) {
     ref.read(deviceStatusProvider(device)).when(
-          data: (status) => showStream(context, ref, status, device),
-          loading: (previous) {},
-          error: (error, stack, _) {
-            showError(context, error as Exception, stack);
+          data: (status) =>
+              navigateToStreamingScreen(context, ref, status, device),
+          loading: () {},
+          error: (error, stack) {
+            showErrorDialog(context, error as Exception, stack);
           },
         );
   }
 
-  ///
-  Future<void> showStream(
+  Future<void> navigateToStreamingScreen(
     BuildContext context,
     WidgetRef ref,
     SystemStatus status,
     Device device,
   ) async {
-    ref.read(selectedDeviceProvider).state = device;
-    ref.read(selectedDeviceStatusProvider).state = status;
+    ref.read(selectedDeviceProvider.notifier).state = device;
+    ref.read(selectedDeviceStatusProvider.notifier).state = status;
 
     await Navigator.push(
       context,
@@ -124,9 +121,12 @@ class ConnectScreen extends ConsumerWidget {
     });
   }
 
-  ///
-  void showError(BuildContext context, Exception error, StackTrace? stack) {
-    showDialog(
+  Future<void> showErrorDialog(
+    BuildContext context,
+    Exception error,
+    StackTrace? stack,
+  ) {
+    return showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Fehler'),
