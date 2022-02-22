@@ -80,7 +80,7 @@ class StreamingScreen extends ConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-                horizontal: _bodyPadding, vertical: 8.0),
+                horizontal: _bodyPadding, vertical: _bodyPadding),
             child: Consumer(
               builder: (context, ref, child) {
                 final viewModel = ref.watch(_viewModelProvider);
@@ -114,6 +114,7 @@ class StreamingScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
+                    SizedBox(height: _bodyPadding),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
