@@ -11,13 +11,15 @@ dependencies:
     sdk: flutter
 
   flutter_riverpod: ^1.0.3
-  multicast_dns: ^0.3.1
+  multicast_dns:
+    git: https://github.com/0xNF/flutter_multicast_dns
   socket_io_client: ^2.0.0-beta
   http: ^0.13.4
   modal_bottom_sheet: ^2.0.0
   horizontal_picker: ^1.2.0
   logging: ^1.0.2
   network_info_plus: ^2.1.2
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

@@ -7,16 +7,17 @@ import '../models/device.dart';
 class MDNSService {
   // reusePort is ignored on Android. Thrown error can be ignored.
   // See: https://github.com/flutter/flutter/issues/55173#issuecomment-655051797
-
   // Android does not find any devices if port != 0
   // See: https://stackoverflow.com/a/60488382
-  static Future<RawDatagramSocket> socketFactory(dynamic host, int port,
-      {bool? reuseAddress, bool? reusePort, int? ttl}) {
-    return RawDatagramSocket.bind(host, 0,
-        reuseAddress: true, reusePort: false, ttl: ttl!);
-  }
+  // static Future<RawDatagramSocket> socketFactory(dynamic host, int port,
+  //     {bool? reuseAddress, bool? reusePort, int? ttl}) {
+  //   return RawDatagramSocket.bind(host, 0,
+  //       reuseAddress: true, reusePort: false, ttl: ttl!);
+  // }
+  //
+  // final client = MDnsClient(rawDatagramSocketFactory: socketFactory);
 
-  final client = MDnsClient(rawDatagramSocketFactory: socketFactory);
+  final client = MDnsClient();
 
   Future<List<Device>> discoverDevices(
       [Duration timeout = const Duration(seconds: 1)]) async {

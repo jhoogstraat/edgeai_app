@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../library/models/device.dart';
 import '../../../library/models/status.dart';
-import '../../../library/notifiers/devices_notifier.dart';
 import '../../../library/providers/app_providers.dart';
 import '../../../library/providers/config_providers.dart';
 import '../streaming/streaming_screen.dart';

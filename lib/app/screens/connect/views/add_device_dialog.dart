@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:collection/collection.dart';
+import 'package:edgeai_app/library/providers/service_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -61,8 +64,26 @@ class _AddDeviceState extends ConsumerState<AddDeviceDialog> {
   }
 
   Future<void> _useLocalAddress() async {
-    final info = NetworkInfo();
-    var ip = await info.getWifiIP();
+    String? ip;
+
+    if (Platform.isWindows) {
+      final interfaces = await ref
+          .read(mdnsProvider)
+          .client
+          .allInterfacesFactory(InternetAddressType.any);
+      final interface = interfaces
+          .firstWhereOrNull((interface) => interface.name == "Ethernet");
+      if (interface != null) {
+        final ipv4 = interface.addresses.firstWhereOrNull(
+            (address) => address.type == InternetAddressType.IPv4);
+        if (ipv4 != null) {
+          ip = ipv4.address;
+        }
+      }
+    } else if (Platform.isIOS || Platform.isAndroid) {
+      final info = NetworkInfo();
+      ip = await info.getWifiIP();
+    }
 
     if (ip != null) {
       final truncated = ip.substring(0, ip.lastIndexOf(".") + 1);
